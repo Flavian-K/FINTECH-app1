@@ -25,7 +25,49 @@
 
 		<!-- Main content (to be added in future) -->
 		<main>
-			<!-- Content will go here -->
+			<section id="budget">
+				<h2>Budget Management</h2>
+				<!-- Form for adding a new budget category -->
+				<form>
+					<label for="category">Category Name:</label>
+					<input type="text" id="category" name="category" />
+
+					<label for="amount">Allocated Amount:</label>
+					<input type="number" id="amount" name="amount" />
+
+					<button type="submit">Add Category</button>
+				</form>
+
+				<!-- Placeholder for displaying budget categories -->
+				<div id="budget-list">
+					<h3>Your Budget Categories</h3>
+					<!-- List of budget categories will be displayed here -->
+				</div>
+			</section>
+
+			<!-- Section for Expense Tracking -->
+			<section id="expenses">
+				<h2>Expense Tracking</h2>
+
+				<!-- Form for logging an expense -->
+				<form>
+					<label for="expense-category">Select Category:</label>
+					<select id="expense-category" name="expense-category">
+						<!-- Budget categories options will be dynamically populated here -->
+					</select>
+
+					<label for="expense-amount">Expense Amount:</label>
+					<input type="number" id="expense-amount" name="expense-amount" />
+
+					<button type="submit">Log Expense</button>
+				</form>
+
+				<!-- Placeholder for displaying logged expenses -->
+				<div id="expense-list">
+					<h3>Your Expenses</h3>
+					<!-- List of expenses will be displayed here -->
+				</div>
+			</section>
 		</main>
 
 		<!-- Footer section (to be added later) -->
