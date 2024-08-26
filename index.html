@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<!-- Metadata about the document -->
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Budget Tracker App</title>
 		<link rel="stylesheet" href="styles.css" />
+		<!-- Link to your CSS file -->
 	</head>
 	<body>
 		<!-- Header section with the app's title -->
@@ -24,9 +24,13 @@
 			</ul>
 		</nav>
 
-		<!-- Main content (to be added in future) -->
-		<main>
-			<section id="budget">
+		<!-- Main container for all cards -->
+		<div class="container">
+			<!-- Changed: Added a container div to wrap all cards -->
+
+			<!-- Budget Management Card -->
+			<div class="card">
+				<!-- Changed: Wrapped the Budget section in a card div -->
 				<h2>Budget Management</h2>
 				<!-- Form for adding a new budget category -->
 				<form>
@@ -44,10 +48,12 @@
 					<h3>Your Budget Categories</h3>
 					<!-- List of budget categories will be displayed here -->
 				</div>
-			</section>
+			</div>
+			<!-- End of Budget Management Card -->
 
-			<!-- Section for Expense Tracking -->
-			<section id="expenses">
+			<!-- Expense Tracking Card -->
+			<div class="card">
+				<!-- Changed: Wrapped the Expense Tracking section in a card div -->
 				<h2>Expense Tracking</h2>
 
 				<!-- Form for logging an expense -->
@@ -68,11 +74,21 @@
 					<h3>Your Expenses</h3>
 					<!-- List of expenses will be displayed here -->
 				</div>
-			</section>
+			</div>
+			<!-- End of Expense Tracking Card -->
 
-			<!-- Section for Reports -->
-			<section id="reports">
+			<!-- Reports Card -->
+			<div class="card">
+				<!-- Changed: Wrapped the Reports section in a card div -->
 				<h2>Spending Reports</h2>
+
+				<div class="flex-row">
+					<!-- Changed: Added a flex-row div for arranging reports side by side -->
+					<div class="circle-chart"></div>
+					<!-- Placeholder for a chart -->
+					<div class="circle-chart"></div>
+					<!-- Another placeholder for a chart -->
+				</div>
 
 				<!-- Placeholder for getting and showing reports -->
 				<div id="report-display">
@@ -82,10 +98,12 @@
 
 				<!-- Button to generate a report -->
 				<button type="button">Generate Report</button>
-			</section>
+			</div>
+			<!-- End of Reports Card -->
 
-			<!-- Section for Settings -->
-			<section id="settings">
+			<!-- Settings Card -->
+			<div class="card">
+				<!-- Changed: Wrapped the Settings section in a card div -->
 				<h2>App Settings</h2>
 
 				<!-- Form for updating user settings -->
@@ -102,13 +120,18 @@
 
 					<button type="submit">Save Settings</button>
 				</form>
-			</section>
-			<!-- Section for Additional Features (if needed) -->
-			<section id="additional-features">
+			</div>
+			<!-- End of Settings Card -->
+
+			<!-- Additional Features Card -->
+			<div class="card">
+				<!-- Changed: Wrapped the Additional Features section in a card div -->
 				<h2>Additional Features</h2>
 				<p>Placeholder for future features or extensions of the app.</p>
-			</section>
-		</main>
+			</div>
+			<!-- End of Additional Features Card -->
+		</div>
+		<!-- End of Main Container -->
 
 		<!-- Footer section -->
 		<footer>
