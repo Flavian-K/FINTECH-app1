@@ -57,14 +57,25 @@
 				<h2>Expense Tracking</h2>
 
 				<!-- Form for logging an expense -->
+				<!-- Updated Form for logging an expense -->
 				<form>
-					<label for="expense-category">Select Category:</label>
-					<select id="expense-category" name="expense-category">
-						<!-- Budget categories options will be dynamically populated here -->
-					</select>
+					<!-- Changed: Replaced the select dropdown with a text input field -->
+					<label for="expense-category">Enter Category:</label>
+					<input
+						type="text"
+						id="expense-category"
+						name="expense-category"
+						placeholder="Type category here"
+					/>
+					<!-- Now the user can type in any category -->
 
 					<label for="expense-amount">Expense Amount:</label>
-					<input type="number" id="expense-amount" name="expense-amount" />
+					<input
+						type="number"
+						id="expense-amount"
+						name="expense-amount"
+						placeholder="Enter amount"
+					/>
 
 					<button type="submit">Log Expense</button>
 				</form>
