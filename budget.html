@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Budget Tracker App - Home</title>
+		<title>Budget Tracker App - Budget</title>
 		<link rel="stylesheet" href="styles.css" />
 		<!-- Link to your CSS file -->
 	</head>
@@ -27,12 +27,28 @@
 		<!-- Main container for all cards -->
 		<div class="container">
 			<!-- Changed: Added a container div to wrap all cards -->
+			<!-- Budget Management Card -->
 			<div class="card">
-				<!-- Changed: Wrapped the Home content in a card div -->
-				<h2>Welcome to the Budget Tracker App</h2>
-				<p>This is your personal tool to manage and track your expenses.</p>
+				<!-- Changed: Wrapped the Budget section in a card div -->
+				<h2>Budget Management</h2>
+				<!-- Form for adding a new budget category -->
+				<form>
+					<label for="category">Category Name:</label>
+					<input type="text" id="category" name="category" />
+
+					<label for="amount">Allocated Amount:</label>
+					<input type="number" id="amount" name="amount" />
+
+					<button type="submit">Add Category</button>
+				</form>
+
+				<!-- Placeholder for displaying budget categories -->
+				<div id="budget-list">
+					<h3>Your Budget Categories</h3>
+					<!-- List of budget categories will be displayed here -->
+				</div>
 			</div>
-			<!-- End of Home Card -->
+			<!-- End of Budget Management Card -->
 		</div>
 		<!-- End of Main Container -->
 

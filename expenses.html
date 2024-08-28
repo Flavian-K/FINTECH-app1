@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Budget Tracker App - Home</title>
+		<title>Budget Tracker App - Expenses</title>
 		<link rel="stylesheet" href="styles.css" />
 		<!-- Link to your CSS file -->
 	</head>
@@ -27,12 +27,41 @@
 		<!-- Main container for all cards -->
 		<div class="container">
 			<!-- Changed: Added a container div to wrap all cards -->
+			<!-- Expense Tracking Card -->
 			<div class="card">
-				<!-- Changed: Wrapped the Home content in a card div -->
-				<h2>Welcome to the Budget Tracker App</h2>
-				<p>This is your personal tool to manage and track your expenses.</p>
+				<!-- Changed: Wrapped the Expense Tracking section in a card div -->
+				<h2>Expense Tracking</h2>
+
+				<!-- Updated Form for logging an expense -->
+				<form>
+					<!-- Changed: Replaced the select dropdown with a text input field -->
+					<label for="expense-category">Enter Category:</label>
+					<input
+						type="text"
+						id="expense-category"
+						name="expense-category"
+						placeholder="Type category here"
+					/>
+					<!-- Now the user can type in any category -->
+
+					<label for="expense-amount">Expense Amount:</label>
+					<input
+						type="number"
+						id="expense-amount"
+						name="expense-amount"
+						placeholder="Enter amount"
+					/>
+
+					<button type="submit">Log Expense</button>
+				</form>
+
+				<!-- Placeholder for displaying logged expenses -->
+				<div id="expense-list">
+					<h3>Your Expenses</h3>
+					<!-- List of expenses will be displayed here -->
+				</div>
 			</div>
-			<!-- End of Home Card -->
+			<!-- End of Expense Tracking Card -->
 		</div>
 		<!-- End of Main Container -->
 

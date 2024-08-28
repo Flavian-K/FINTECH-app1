@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Budget Tracker App - Home</title>
+		<title>Budget Tracker App - Settings</title>
 		<link rel="stylesheet" href="styles.css" />
 		<!-- Link to your CSS file -->
 	</head>
@@ -27,12 +27,27 @@
 		<!-- Main container for all cards -->
 		<div class="container">
 			<!-- Changed: Added a container div to wrap all cards -->
+			<!-- Settings Card -->
 			<div class="card">
-				<!-- Changed: Wrapped the Home content in a card div -->
-				<h2>Welcome to the Budget Tracker App</h2>
-				<p>This is your personal tool to manage and track your expenses.</p>
+				<!-- Changed: Wrapped the Settings section in a card div -->
+				<h2>App Settings</h2>
+
+				<!-- Form for updating user settings -->
+				<form>
+					<label for="currency">Select Currency:</label>
+					<select id="currency" name="currency">
+						<option value="ksh">Kenyan Shilling (Ksh)</option>
+						<option value="usd">US Dollar (USD)</option>
+						<!-- More currency options can be added here -->
+					</select>
+
+					<label for="notifications">Enable Notifications:</label>
+					<input type="checkbox" id="notifications" name="notifications" />
+
+					<button type="submit">Save Settings</button>
+				</form>
 			</div>
-			<!-- End of Home Card -->
+			<!-- End of Settings Card -->
 		</div>
 		<!-- End of Main Container -->
 
