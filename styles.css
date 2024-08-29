@@ -30,12 +30,12 @@ nav {
 }
 
 nav ul {
-	list-style-type: none; /* Changed: Remove the bullet points */
+	list-style-type: none; /* Remove the bullet points */
 	margin: 0;
 	padding: 0;
-	display: flex; /* Changed: Align the list items in a row */
-	justify-content: center; /* Changed: Center the navigation items */
-	gap: 20px; /* Changed: Add spacing between the menu items to prevent overlapping */
+	display: flex; /* Align the list items in a row */
+	justify-content: center; /* Center the navigation items */
+	gap: 20px; /* Add spacing between the menu items to prevent overlapping */
 }
 
 nav ul li {
@@ -80,6 +80,57 @@ nav a:hover {
 .card h2 {
 	margin-top: 0;
 	color: #4a3f55; /* Darker pastel purple for text */
+	margin-bottom: 20px; /* Changed: Added spacing below the heading */
+}
+
+/* Form and input styles */
+form {
+	display: flex;
+	flex-direction: column; /* Changed: Align inputs and labels vertically */
+	gap: 15px; /* Changed: Add spacing between form elements */
+}
+
+label {
+	margin-bottom: 5px; /* Changed: Add a small gap between label and input */
+}
+
+input[type="text"],
+input[type="number"] {
+	padding: 10px;
+	border-radius: 8px; /* Changed: Rounded corners for input fields */
+	border: 1px solid #b1a7f3; /* Changed: Added a border with a pastel purple color */
+	background-color: rgba(
+		255,
+		255,
+		255,
+		0.5
+	); /* Changed: Added a semi-transparent background to make them stand out */
+	font-size: 16px;
+	color: #4a3f55; /* Darker pastel purple for text */
+}
+
+button {
+	padding: 10px 15px;
+	border-radius: 8px; /* Changed: Rounded corners for the button */
+	border: 1px solid #b1a7f3; /* Changed: Added a border with a pastel purple color */
+	background-color: rgba(
+		255,
+		255,
+		255,
+		0.5
+	); /* Changed: Semi-transparent background */
+	color: #4a3f55; /* Darker pastel purple for text */
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+button:hover {
+	background-color: rgba(
+		255,
+		255,
+		255,
+		0.7
+	); /* Changed: Lighter background on hover */
 }
 
 /* Flex container for reports and transactions */
