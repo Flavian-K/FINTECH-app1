@@ -156,3 +156,32 @@ button:hover {
 	border-radius: 50%; /* Circular shape */
 	margin: 0 auto;
 }
+
+/* Ensure list items are flex containers */
+#budget-list li {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 5px 0;
+}
+
+/* Style the delete button to make it uniform */
+#budget-list li button {
+	flex-shrink: 0; /* Prevent button from shrinking */
+	margin-left: 10px; /* Add spacing between the text and the button */
+	background-color: rgba(
+		255,
+		255,
+		255,
+		0.7
+	); /* Make the button blend with your theme */
+	border: 1px solid #b1a7f3;
+	border-radius: 5px;
+	padding: 5px 10px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+#budget-list li button:hover {
+	background-color: rgba(255, 255, 255, 1); /* Slightly change color on hover */
+}

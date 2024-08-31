@@ -3,12 +3,6 @@ document.addEventListener("DOMContentLoaded", function () {
 	const budgetForm = document.querySelector("form"); // Select the form using the tag name
 	const budgetList = document.querySelector("#budget-list ul"); // Select the <ul> inside #budget-list
 
-	// Check if the form and list exist in the DOM
-	if (!budgetForm || !budgetList) {
-		console.error("Form or list not found in the DOM.");
-		return; // Exit the script if the elements are not found
-	}
-
 	// Initialize an array to store budget categories
 	let budgetCategories =
 		JSON.parse(localStorage.getItem("budgetCategories")) || [];
@@ -17,12 +11,29 @@ document.addEventListener("DOMContentLoaded", function () {
 	function renderBudgetCategories() {
 		budgetList.innerHTML = ""; // Clear the existing list
 
-		// Loop through the budgetCategories array and create list items
-		budgetCategories.forEach(function (category) {
+		// Loop through the budgetCategories array and create list items with delete buttons
+		budgetCategories.forEach(function (category, index) {
 			const li = document.createElement("li");
 			li.textContent = `${category.name}: ${category.amount} Ksh`;
-			budgetList.appendChild(li);
+
+			// Create the delete button (Changed: Added delete button functionality)
+			const deleteButton = document.createElement("button");
+			deleteButton.textContent = "Delete";
+			deleteButton.style.marginLeft = "10px"; // Add some spacing between the text and button
+			deleteButton.addEventListener("click", function () {
+				deleteCategory(index); // Call the delete function when clicked
+			});
+
+			li.appendChild(deleteButton); // Append the delete button to the list item
+			budgetList.appendChild(li); // Append the list item to the list
 		});
+	}
+
+	// Function to delete a category by index (Changed: Added delete functionality)
+	function deleteCategory(index) {
+		budgetCategories.splice(index, 1); // Remove the item at the specified index
+		localStorage.setItem("budgetCategories", JSON.stringify(budgetCategories)); // Update localStorage
+		renderBudgetCategories(); // Re-render the list to reflect the changes
 	}
 
 	// Handle form submission for adding a budget category
