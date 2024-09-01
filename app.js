@@ -1,76 +1,112 @@
 document.addEventListener("DOMContentLoaded", function () {
-	// Select the budget form and the <ul> inside the budget list div
-	const budgetForm = document.querySelector("form"); // Select the form using the tag name
-	const budgetList = document.querySelector("#budget-list ul"); // Select the <ul> inside #budget-list
+	// Budget Tracking Section
+	const budgetForm = document.querySelector("#budget-form"); // Ensure the form has an id of budget-form
+	const budgetList = document.querySelector("#budget-list ul");
 
-	// Initialize an array to store budget categories
 	let budgetCategories =
 		JSON.parse(localStorage.getItem("budgetCategories")) || [];
 
-	// Function to render the budget categories
 	function renderBudgetCategories() {
 		budgetList.innerHTML = ""; // Clear the existing list
 
-		// Loop through the budgetCategories array and create list items with delete buttons
 		budgetCategories.forEach(function (category, index) {
 			const li = document.createElement("li");
 			li.textContent = `${category.name}: ${category.amount} Ksh`;
 
-			// Create the delete button (Changed: Added delete button functionality)
 			const deleteButton = document.createElement("button");
 			deleteButton.textContent = "Delete";
-			deleteButton.style.marginLeft = "10px"; // Add some spacing between the text and button
+			deleteButton.style.marginLeft = "10px";
 			deleteButton.addEventListener("click", function () {
-				deleteCategory(index); // Call the delete function when clicked
+				deleteCategory(index);
 			});
 
-			li.appendChild(deleteButton); // Append the delete button to the list item
-			budgetList.appendChild(li); // Append the list item to the list
+			li.appendChild(deleteButton);
+			budgetList.appendChild(li);
 		});
 	}
 
-	// Function to delete a category by index (Changed: Added delete functionality)
 	function deleteCategory(index) {
-		budgetCategories.splice(index, 1); // Remove the item at the specified index
-		localStorage.setItem("budgetCategories", JSON.stringify(budgetCategories)); // Update localStorage
-		renderBudgetCategories(); // Re-render the list to reflect the changes
+		budgetCategories.splice(index, 1);
+		localStorage.setItem("budgetCategories", JSON.stringify(budgetCategories));
+		renderBudgetCategories();
 	}
 
-	// Handle form submission for adding a budget category
-	budgetForm.addEventListener("submit", function (event) {
-		event.preventDefault(); // Prevent the default form submission behavior
+	if (budgetForm) {
+		budgetForm.addEventListener("submit", function (event) {
+			event.preventDefault();
 
-		// Get the input values from the form
-		const categoryName = budgetForm.querySelector("#category").value.trim();
-		const allocatedAmount = budgetForm.querySelector("#amount").value.trim();
+			const categoryName = budgetForm.querySelector("#category").value.trim();
+			const allocatedAmount = budgetForm.querySelector("#amount").value.trim();
 
-		// Ensure both fields are filled
-		if (categoryName && allocatedAmount) {
-			// Create a budget category object
-			const budgetCategory = {
-				name: categoryName,
-				amount: allocatedAmount,
-			};
+			if (categoryName && allocatedAmount) {
+				const budgetCategory = {
+					name: categoryName,
+					amount: allocatedAmount,
+				};
 
-			// Add the new category to the budgetCategories array
-			budgetCategories.push(budgetCategory);
+				budgetCategories.push(budgetCategory);
 
-			// Save the updated budgetCategories array to localStorage
-			localStorage.setItem(
-				"budgetCategories",
-				JSON.stringify(budgetCategories)
-			);
+				localStorage.setItem(
+					"budgetCategories",
+					JSON.stringify(budgetCategories)
+				);
 
-			// Re-render the budget categories list
-			renderBudgetCategories();
+				renderBudgetCategories();
 
-			// Reset the form fields after submission
-			budgetForm.reset();
-		} else {
-			console.error("Please fill in both fields."); // Debugging message
-		}
-	});
+				budgetForm.reset();
+			} else {
+				console.error("Please fill in both fields.");
+			}
+		});
 
-	// Initial render of budget categories on page load
-	renderBudgetCategories();
+		renderBudgetCategories(); // Initial render of budget categories on page load
+	}
+
+	// Expense Tracking Section
+	const expenseForm = document.querySelector("#expense-form"); // Ensure the form has an id of expense-form
+	const expenseList = document.querySelector("#expense-list ul");
+
+	let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+
+	function renderExpenses() {
+		expenseList.innerHTML = ""; // Clear the existing list
+
+		expenses.forEach(function (expense) {
+			const li = document.createElement("li");
+			li.textContent = `${expense.category}: ${expense.amount} Ksh`;
+			expenseList.appendChild(li);
+		});
+	}
+
+	if (expenseForm) {
+		expenseForm.addEventListener("submit", function (event) {
+			event.preventDefault();
+
+			const categoryInput = expenseForm
+				.querySelector("#expense-category")
+				.value.trim();
+			const amountInput = expenseForm
+				.querySelector("#expense-amount")
+				.value.trim();
+
+			if (categoryInput && amountInput) {
+				const expense = {
+					category: categoryInput,
+					amount: amountInput,
+				};
+
+				expenses.push(expense);
+
+				localStorage.setItem("expenses", JSON.stringify(expenses));
+
+				renderExpenses();
+
+				expenseForm.reset();
+			} else {
+				console.error("Please fill in both fields.");
+			}
+		});
+
+		renderExpenses(); // Initial render of expenses on page load
+	}
 });
