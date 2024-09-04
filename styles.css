@@ -185,3 +185,25 @@ button:hover {
 #budget-list li button:hover {
 	background-color: rgba(255, 255, 255, 1); /* Slightly change color on hover */
 }
+
+/* Style for expense items */
+#expense-list p {
+	display: flex;
+	justify-content: space-between; /* Ensure the text and delete button are separated */
+	align-items: center; /* Vertically center the items */
+	padding: 5px 0; /* Add some padding for better spacing */
+}
+
+/* Optional: Style for delete button */
+#expense-list button {
+	background-color: #f8d7da; /* Slightly red background */
+	color: #721c24; /* Dark red text */
+	border: none;
+	border-radius: 5px;
+	padding: 5px 10px;
+	cursor: pointer;
+}
+
+#expense-list button:hover {
+	background-color: #f5c6cb; /* Slightly lighter red on hover */
+}

@@ -78,6 +78,46 @@ document.addEventListener("DOMContentLoaded", function () {
 	const expenseForm = document.querySelector("#expense-form"); // Select the expense form by its ID
 	const expenseList = document.getElementById("expense-list"); // Select the expense list container
 
+	// Retrieve expenses from localStorage or initialize an empty array
+	let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+
+	// Function to render expenses (new addition)
+	function renderExpenses() {
+		expenseList.innerHTML = ""; // Clear the current expense list
+
+		// Loop through the expenses array and create list items
+		expenses.forEach(function (expense, index) {
+			const expenseItem = document.createElement("p");
+			expenseItem.textContent = `${expense.category}: ${expense.amount} Ksh`;
+
+			// Create the delete button (New Addition)
+			const deleteButton = document.createElement("button");
+			deleteButton.textContent = "Delete";
+			deleteButton.style.marginLeft = "10px"; // Add some spacing between text and button
+
+			// Add event listener to delete the expense item (New Addition)
+			deleteButton.addEventListener("click", function () {
+				deleteExpense(index); // Call the delete function when clicked
+			});
+
+			// Append the delete button to the expense item
+			expenseItem.appendChild(deleteButton);
+
+			// Add the new expense item to the expense list
+			expenseList.appendChild(expenseItem);
+		});
+	}
+
+	// Function to delete an expense by index (New Addition)
+	function deleteExpense(index) {
+		expenses.splice(index, 1); // Remove the expense from the array
+		localStorage.setItem("expenses", JSON.stringify(expenses)); // Update localStorage
+		renderExpenses(); // Re-render the list to reflect the changes
+	}
+
+	// Initial render of expenses on page load (New Addition)
+	renderExpenses();
+
 	if (expenseForm) {
 		// Listen for form submission
 		expenseForm.addEventListener("submit", function (event) {
@@ -89,12 +129,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
 			// Check if both category and amount are provided
 			if (category && amount) {
-				// Create a new expense item
-				const expenseItem = document.createElement("p");
-				expenseItem.textContent = `${category}: ${amount} Ksh`;
+				// Create a new expense object
+				const expense = {
+					category: category,
+					amount: amount,
+				};
 
-				// Add the new expense item to the expense list
-				expenseList.appendChild(expenseItem);
+				// Add the new expense to the expenses array
+				expenses.push(expense);
+
+				// Save the updated expenses array to localStorage (New Addition)
+				localStorage.setItem("expenses", JSON.stringify(expenses));
+
+				// Re-render the expenses list
+				renderExpenses();
 
 				// Clear the input fields
 				expenseForm.reset();
