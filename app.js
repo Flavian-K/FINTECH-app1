@@ -151,4 +151,72 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 		});
 	}
+	// Select the button and report display elements
+	const generateReportButton = document.querySelector("button"); // Select the 'Generate Report' button
+	const reportDisplay = document.getElementById("report-display"); // Select the div where the report will be displayed
+
+	// Retrieve budget categories and expenses from localStorage
+	const budgetCategories =
+		JSON.parse(localStorage.getItem("budgetCategories")) || [];
+	const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+
+	// Function to generate and display the report
+	function generateReport() {
+		// Clear any previous report
+		reportDisplay.innerHTML = "";
+
+		// Check if there are any budget categories or expenses
+		if (budgetCategories.length === 0 || expenses.length === 0) {
+			reportDisplay.innerHTML =
+				"<p>No data available to generate the report.</p>";
+			return;
+		}
+
+		// Calculate total budget and total expenses
+		const totalBudget = budgetCategories.reduce(
+			(total, category) => total + parseFloat(category.amount),
+			0
+		);
+		const totalExpenses = expenses.reduce(
+			(total, expense) => total + parseFloat(expense.amount),
+			0
+		);
+
+		// Display a summary
+		const summary = document.createElement("p");
+		summary.innerHTML = `<strong>Total Budget:</strong> ${totalBudget} Ksh<br>
+                         <strong>Total Expenses:</strong> ${totalExpenses} Ksh<br>
+                         <strong>Remaining Budget:</strong> ${
+														totalBudget - totalExpenses
+													} Ksh`;
+		reportDisplay.appendChild(summary);
+
+		// Create and display a chart (basic text-based chart as an example)
+		const chart = document.createElement("div");
+		const chartWidth = 200; // Width of the chart container
+		const expensePercentage = (totalExpenses / totalBudget) * 100;
+		const remainingPercentage = 100 - expensePercentage;
+
+		chart.innerHTML = `
+        <div style="background-color: lightcoral; width: ${expensePercentage}%; height: 20px;"></div>
+        <div style="background-color: lightgreen; width: ${remainingPercentage}%; height: 20px;"></div>
+    `;
+		reportDisplay.appendChild(chart);
+
+		// Additional breakdown by categories
+		const breakdown = document.createElement("ul");
+		budgetCategories.forEach((category) => {
+			const categoryTotal = expenses
+				.filter((expense) => expense.category === category.name)
+				.reduce((total, expense) => total + parseFloat(expense.amount), 0);
+
+			const listItem = document.createElement("li");
+			listItem.innerHTML = `<strong>${category.name}:</strong> Budgeted ${category.amount} Ksh, Spent ${categoryTotal} Ksh`;
+			breakdown.appendChild(listItem);
+		});
+		reportDisplay.appendChild(breakdown);
+	}
+
+	// Add event listener to the 'Generate Report' button
+	generateReportButton.addEventListener("click", generateReport);
 });
