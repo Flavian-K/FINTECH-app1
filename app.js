@@ -156,9 +156,9 @@ document.addEventListener("DOMContentLoaded", function () {
 	const reportDisplay = document.getElementById("report-display"); // Select the div where the report will be displayed
 
 	// Retrieve budget categories and expenses from localStorage
-	const budgetCategories =
-		JSON.parse(localStorage.getItem("budgetCategories")) || [];
-	const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+	// fixed the redeclaring of budgetCategories and expenses variables that had broken functionality of reports section
+	budgetCategories = JSON.parse(localStorage.getItem("budgetCategories")) || [];
+	expenses = JSON.parse(localStorage.getItem("expenses")) || [];
 
 	// Function to generate and display the report
 	function generateReport() {
