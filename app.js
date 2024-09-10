@@ -219,4 +219,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	// Add event listener to the 'Generate Report' button
 	generateReportButton.addEventListener("click", generateReport);
+
+	// Handle user login
+	loginForm.addEventListener("submit", function (event) {
+		event.preventDefault(); // Prevent the form from submitting the traditional way
+
+		// Get input values
+		const username = document.querySelector("#login-username").value.trim();
+		const password = document.querySelector("#login-password").value;
+
+		// Check if user exists in localStorage
+		const user = JSON.parse(localStorage.getItem(username));
+
+		if (user && user.password === password) {
+			alert("Login successful!");
+			// Store the logged-in user in sessionStorage to track the active session
+			sessionStorage.setItem("loggedInUser", username);
+
+			// Redirect to another page (e.g., the budget tracking page)
+			window.location.href = "budget.html";
+		} else {
+			alert("Invalid username or password.");
+		}
+	});
+	// end of login functionality
 });
