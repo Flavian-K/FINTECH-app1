@@ -3,7 +3,46 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
+		<title>Budget Tracker App - Registration</title>
+		<link rel="stylesheet" href="styles.css" />
 	</head>
-	<body></body>
+	<body>
+		<header>
+			<h1>Budget Tracker App</h1>
+		</header>
+
+		<div class="container">
+			<!-- Registration Card -->
+			<div class="card">
+				<h2>Register</h2>
+
+				<form id="register-form">
+					<label for="register-username">Username:</label>
+					<input
+						type="text"
+						id="register-username"
+						placeholder="Enter username"
+						required
+					/>
+
+					<label for="register-password">Password:</label>
+					<input
+						type="password"
+						id="register-password"
+						placeholder="Enter password"
+						required
+					/>
+
+					<button type="submit">Register</button>
+				</form>
+			</div>
+			<!-- End of Registration Card -->
+		</div>
+
+		<footer>
+			<p>&copy; 2024 Budget Tracker App. All rights reserved.</p>
+			<p>Contact us at: <a href="#">support@budgettrackerapp.com</a></p>
+		</footer>
+		<script src="app.js"></script>
+	</body>
 </html>
