@@ -243,4 +243,33 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	});
 	// end of login functionality
+
+	// Listen for form submission
+	registerForm.addEventListener("submit", function (event) {
+		event.preventDefault(); // Prevent the form from submitting the traditional way
+
+		// Get the input values
+		const username = usernameInput.value.trim();
+		const password = passwordInput.value.trim();
+
+		// Check if both fields are filled
+		if (username && password) {
+			// Save the user information in localStorage
+			const user = {
+				username: username,
+				password: password, // Ideally, this would be hashed in a real-world application
+			};
+
+			localStorage.setItem("registeredUser", JSON.stringify(user));
+
+			// Notify the user of successful registration
+			alert("Registration successful!");
+
+			// Redirect to the login page (if applicable)
+			window.location.href = "login.html"; // Redirect to login page after successful registration
+		} else {
+			alert("Please fill out both fields.");
+		}
+	});
+	// end of registration functionality.
 });
