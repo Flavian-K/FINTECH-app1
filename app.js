@@ -75,9 +75,9 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	// Expense Tracking Section
-	const expenseForm = document.querySelector("#expense-form"); // Select the expense form by its ID
-	const expenseList = document.getElementById("expense-list"); // Select the expense list container
-
+	const expenseForm = document.querySelector("#expenseForm"); // Select the expense form by its ID
+	const expenseList = document.getElementById("expenseList"); // Select the expense list container
+	console.log("expenseList");
 	// Retrieve expenses from localStorage or initialize an empty array
 	let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
 
