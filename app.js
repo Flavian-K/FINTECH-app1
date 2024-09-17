@@ -75,14 +75,16 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	// Expense Tracking Section
-	const expenseForm = document.querySelector("#expenseForm"); // Select the expense form by its ID
-	const expenseList = document.getElementById("expenseList"); // Select the expense list container
-	console.log("expenseList");
+
 	// Retrieve expenses from localStorage or initialize an empty array
 	let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
 
 	// Function to render expenses (new addition)
+	const expenseForm = document.querySelector("#expenseForm"); // Select the expense form by its ID
+
 	function renderExpenses() {
+		const expenseList = document.getElementById("expenseList"); // Select the expense list container
+		console.log(expenseList);
 		expenseList.innerHTML = ""; // Clear the current expense list
 
 		// Loop through the expenses array and create list items
@@ -116,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	// Initial render of expenses on page load (New Addition)
-	renderExpenses();
+	// renderExpenses();
 
 	if (expenseForm) {
 		// Listen for form submission
