@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 
 		// Initial render of expenses on page load (New Addition)
-		// renderExpenses();
+		renderExpenses();
 
 		if (expenseForm) {
 			// Listen for form submission
@@ -172,10 +172,9 @@ document.addEventListener("DOMContentLoaded", function () {
 		const reportDisplay = document.getElementById("report-display"); // Select the div where the report will be displayed
 
 		// Retrieve budget categories and expenses from localStorage
-		// fixed the redeclaring of budgetCategories and expenses variables that had broken functionality of reports section
-		budgetCategories =
+		let budgetCategories =
 			JSON.parse(localStorage.getItem("budgetCategories")) || [];
-		expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+		let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
 
 		// Function to generate and display the report
 		function generateReport() {
@@ -244,60 +243,66 @@ document.addEventListener("DOMContentLoaded", function () {
 	// Handle user login
 	else if (currentPage.includes("login.html")) {
 		const loginForm = document.querySelector("#login-form"); // Select the login form by its ID
-        if (loginForm) {
-		loginForm.addEventListener("submit", function (event) {
-			event.preventDefault(); // Prevent the form from submitting the traditional way
+		if (loginForm) {
+			loginForm.addEventListener("submit", function (event) {
+				event.preventDefault(); // Prevent the form from submitting the traditional way
 
-			// Get input values
-			const username = document.querySelector("#login-username").value.trim();
-			const password = document.querySelector("#login-password").value;
+				// Get input values
+				const username = document.querySelector("#login-username").value.trim();
+				const password = document.querySelector("#login-password").value;
 
-			// Check if user exists in localStorage
-			const user = JSON.parse(localStorage.getItem(username));
+				// Check if user exists in localStorage
+				const user = JSON.parse(localStorage.getItem(username));
 
-			if (user && user.password === password) {
-				alert("Login successful!");
-				// Store the logged-in user in sessionStorage to track the active session
-				sessionStorage.setItem("loggedInUser", username);
+				if (user && user.password === password) {
+					alert("Login successful!");
+					// Store the logged-in user in sessionStorage to track the active session
+					sessionStorage.setItem("loggedInUser", username);
 
-				// Redirect to another page (e.g., the budget tracking page)
-				window.location.href = "budget.html";
-			} else {
-				alert("Invalid username or password.");
-			}
-            
-		});
+					// Redirect to another page (e.g., the budget tracking page)
+					window.location.href = "budget.html";
+				} else {
+					alert("Invalid username or password.");
+				}
+			});
+		}
 	}
 	// end of login functionality
 
-	// Listen for form submission
+	// Handle user registration
 	else if (currentPage.includes("registration.html")) {
-		registerForm.addEventListener("submit", function (event) {
-			event.preventDefault(); // Prevent the form from submitting the traditional way
+		const registerForm = document.querySelector("#register-form");
+		const usernameInput = document.querySelector("#register-username");
+		const passwordInput = document.querySelector("#register-password");
 
-			// Get the input values
-			const username = usernameInput.value.trim();
-			const password = passwordInput.value.trim();
+		if (registerForm) {
+			registerForm.addEventListener("submit", function (event) {
+				event.preventDefault(); // Prevent the form from submitting the traditional way
 
-			// Check if both fields are filled
-			if (username && password) {
-				// Save the user information in localStorage
-				const user = {
-					username: username,
-					password: password, // Ideally, this would be hashed in a real-world application
-				};
+				// Get the input values
+				const username = usernameInput.value.trim();
+				const password = passwordInput.value.trim();
 
-				localStorage.setItem("registeredUser", JSON.stringify(user));
+				// Check if both fields are filled
+				if (username && password) {
+					// Save the user information in localStorage
+					const user = {
+						username: username,
+						password: password, // Ideally, this would be hashed in a real-world application
+					};
 
-				// Notify the user of successful registration
-				alert("Registration successful!");
+					localStorage.setItem(username, JSON.stringify(user));
 
-				// Redirect to the login page (if applicable)
-				window.location.href = "login.html"; // Redirect to login page after successful registration
-			} else {
-				alert("Please fill out both fields.");
-			}
-		});
+					// Notify the user of successful registration
+					alert("Registration successful!");
+
+					// Redirect to the login page (if applicable)
+					window.location.href = "login.html"; // Redirect to login page after successful registration
+				} else {
+					alert("Please fill out both fields.");
+				}
+			});
+		}
 	}
-	// end of registration functionality.
+	// end of registration functionality
 });
