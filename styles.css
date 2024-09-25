@@ -207,3 +207,17 @@ button:hover {
 #expense-list button:hover {
 	background-color: #f5c6cb; /* Slightly lighter red on hover */
 }
+
+/* Style the expense items container to use flexbox */
+#expenseList p {
+	display: flex;
+	justify-content: space-between; /* This will push the delete button to the far right */
+	align-items: center;
+	padding: 5px 0; /* Add some padding for better readability */
+	border-bottom: 1px solid #ddd; /* Optional: Add a light border for each expense item */
+}
+
+#expenseList button {
+	margin-left: 20px; /* Add a little space between the text and the button */
+	padding: 5px 10px;
+}

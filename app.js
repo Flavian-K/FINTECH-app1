@@ -11,6 +11,34 @@ document.addEventListener("DOMContentLoaded", function () {
 		let budgetCategories =
 			JSON.parse(localStorage.getItem("budgetCategories")) || [];
 
+		// Initialize income
+		let income = JSON.parse(localStorage.getItem("income")) || 0;
+
+		function renderIncome() {
+			const incomeDisplay = document.getElementById("income-value");
+			if (incomeDisplay) {
+				incomeDisplay.textContent = income;
+			}
+		}
+
+		// Handle income form submission
+		const incomeForm = document.querySelector("#income-form");
+		if (incomeForm) {
+			incomeForm.addEventListener("submit", function (event) {
+				event.preventDefault();
+				const incomeAmount = document
+					.getElementById("income-amount")
+					.value.trim();
+				if (incomeAmount) {
+					income = parseFloat(incomeAmount);
+					localStorage.setItem("income", JSON.stringify(income));
+					renderIncome(); // Update the displayed income
+				} else {
+					alert("Please enter an income amount.");
+				}
+			});
+		}
+
 		function renderBudgetCategories() {
 			budgetList.innerHTML = ""; // Clear the existing list
 
