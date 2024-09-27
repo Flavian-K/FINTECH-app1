@@ -333,4 +333,70 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	}
 	// end of registration functionality
+
+	// Password validation function
+	function validatePassword(password) {
+		const minLength = 8;
+		const hasUpperCase = /[A-Z]/.test(password);
+		const hasLowerCase = /[a-z]/.test(password);
+		const hasNumber = /\d/.test(password);
+		const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+		if (password.length < minLength) {
+			alert(`Password must be at least ${minLength} characters long.`);
+			return false;
+		}
+		if (!hasUpperCase) {
+			alert("Password must contain at least one uppercase letter.");
+			return false;
+		}
+		if (!hasLowerCase) {
+			alert("Password must contain at least one lowercase letter.");
+			return false;
+		}
+		if (!hasNumber) {
+			alert("Password must contain at least one number.");
+			return false;
+		}
+		if (!hasSpecialChar) {
+			alert("Password must contain at least one special character.");
+			return false;
+		}
+		return true;
+	}
+
+	// Listen for form submission
+	registerForm.addEventListener("submit", function (event) {
+		event.preventDefault(); // Prevent the form from submitting the traditional way
+
+		// Get the input values
+		const username = usernameInput.value.trim();
+		const password = passwordInput.value.trim();
+
+		// Check if both fields are filled
+		if (username && password) {
+			// Validate the password before proceeding
+			if (!validatePassword(password)) {
+				return; // Stop the registration if the password is not valid
+			}
+
+			// Save the user information in localStorage
+			const user = {
+				username: username,
+				password: password, // Ideally, this would be hashed in a real-world application
+			};
+
+			localStorage.setItem("registeredUser", JSON.stringify(user));
+
+			// Notify the user of successful registration
+			alert("Registration successful!");
+
+			// Redirect to the login page (if applicable)
+			window.location.href = "login.html"; // Redirect to login page after successful registration
+		} else {
+			alert("Please fill out both fields.");
+		}
+	});
+
+	// end of password validation functionality
 });
