@@ -2,6 +2,27 @@ document.addEventListener("DOMContentLoaded", function () {
 	// Get the current page's pathname
 	const currentPage = window.location.pathname;
 
+	if (loginForm) {
+		loginForm.addEventListener("submit", function (event) {
+			event.preventDefault();
+
+			const username = document.querySelector("#login-username").value.trim();
+			const password = document.querySelector("#login-password").value;
+
+			const user = JSON.parse(localStorage.getItem(username));
+
+			if (user && user.password === password) {
+				alert("Login successful!");
+				sessionStorage.setItem("loggedInUser", username);
+
+				// Redirect to the home page
+				window.location.href = "index.html";
+			} else {
+				alert("Invalid username or password.");
+			}
+		});
+	}
+
 	// Budget Tracking Section
 	if (currentPage.includes("budget.html")) {
 		const budgetForm = document.querySelector("#budget-form");
