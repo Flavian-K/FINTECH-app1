@@ -2,25 +2,31 @@ document.addEventListener("DOMContentLoaded", function () {
 	// Get the current page's pathname
 	const currentPage = window.location.pathname;
 
-	if (loginForm) {
-		loginForm.addEventListener("submit", function (event) {
-			event.preventDefault();
+	// Login form section (Fix: Define loginForm before using it)
+	if (currentPage.includes("login.html")) {
+		const loginForm = document.querySelector("#login-form"); // Select the login form by its ID
 
-			const username = document.querySelector("#login-username").value.trim();
-			const password = document.querySelector("#login-password").value;
+		if (loginForm) {
+			// Check if loginForm exists
+			loginForm.addEventListener("submit", function (event) {
+				event.preventDefault();
 
-			const user = JSON.parse(localStorage.getItem(username));
+				const username = document.querySelector("#login-username").value.trim();
+				const password = document.querySelector("#login-password").value;
 
-			if (user && user.password === password) {
-				alert("Login successful!");
-				sessionStorage.setItem("loggedInUser", username);
+				const user = JSON.parse(localStorage.getItem(username));
 
-				// Redirect to the home page
-				window.location.href = "index.html";
-			} else {
-				alert("Invalid username or password.");
-			}
-		});
+				if (user && user.password === password) {
+					alert("Login successful!");
+					sessionStorage.setItem("loggedInUser", username);
+
+					// Redirect to the home page
+					window.location.href = "index.html";
+				} else {
+					alert("Invalid username or password.");
+				}
+			});
+		}
 	}
 
 	// Budget Tracking Section
