@@ -206,4 +206,62 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 		return true;
 	}
+
+	if (currentPage.includes("reports.html")) {
+		const generateReportButton = document.getElementById(
+			"generateReportButton"
+		);
+		const reportDisplay = document.getElementById("report-display");
+		const budgetCategories =
+			JSON.parse(localStorage.getItem("budgetCategories")) || [];
+		const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+		const income = JSON.parse(localStorage.getItem("income")) || 0;
+
+		function generateChart(totalIncome, totalExpenses, remainingBudget) {
+			const ctx = document.getElementById("myChart").getContext("2d");
+			new Chart(ctx, {
+				type: "bar", // or 'pie' for pie chart
+				data: {
+					labels: ["Income", "Expenses", "Remaining Budget"],
+					datasets: [
+						{
+							label: "Amount (in Ksh)",
+							data: [totalIncome, totalExpenses, remainingBudget],
+							backgroundColor: ["lightblue", "lightcoral", "lightgreen"],
+							borderColor: ["blue", "red", "green"],
+							borderWidth: 1,
+						},
+					],
+				},
+				options: {
+					scales: {
+						y: {
+							beginAtZero: true,
+						},
+					},
+				},
+			});
+		}
+
+		function calculateTotals() {
+			// Calculate total budget and total expenses
+			const totalExpenses = expenses.reduce(
+				(total, expense) => total + parseFloat(expense.amount),
+				0
+			);
+			const remainingBudget = income - totalExpenses;
+
+			// Clear previous report
+			reportDisplay.innerHTML = `
+                <p><strong>Total Income:</strong> ${income} Ksh</p>
+                <p><strong>Total Expenses:</strong> ${totalExpenses} Ksh</p>
+                <p><strong>Remaining Budget:</strong> ${remainingBudget} Ksh</p>
+            `;
+
+			// Generate the chart
+			generateChart(income, totalExpenses, remainingBudget);
+		}
+
+		generateReportButton.addEventListener("click", calculateTotals);
+	}
 });
