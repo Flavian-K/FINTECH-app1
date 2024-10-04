@@ -221,3 +221,38 @@ button:hover {
 	margin-left: 20px; /* Add a little space between the text and the button */
 	padding: 5px 10px;
 }
+
+/* General card styling to match the rest of the app */
+.card {
+	padding: 20px;
+	margin: 20px auto;
+	background-color: white;
+	border-radius: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	max-width: 600px;
+	text-align: center;
+}
+
+/* Adjust spacing around charts and reports */
+#report-display {
+	margin: 20px 0;
+}
+
+button {
+	background-color: #d3e4f1; /* Match app color scheme */
+	padding: 10px 20px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+button:hover {
+	background-color: #c2d8eb; /* Slightly darker on hover */
+}
+
+/* Ensure chart takes up proper space */
+#chart-container {
+	width: 100%;
+	height: 300px;
+	margin-top: 20px;
+}
