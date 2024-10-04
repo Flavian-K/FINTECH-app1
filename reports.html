@@ -24,45 +24,24 @@
 			</ul>
 		</nav>
 
-		<!-- Main container for all cards -->
-		<div id="expense-list"></div>
-			<!-- Changed: Added a container div to wrap all cards -->
+		<!-- Main container for the reports -->
+		<div class="container">
 			<!-- Reports Card -->
 			<div class="card">
-				<!-- Changed: Wrapped the Reports section in a card div -->
 				<h2>Spending Reports</h2>
+				<canvas id="myChart" width="400" height="200"></canvas>
+				<!-- Placeholder for the chart -->
 
-				<div class="flex-row">
-					<!-- Changed: Added a flex-row div for arranging reports side by side -->
-					<div class="circle-chart"></div>
-					<!-- Placeholder for a chart -->
-					<div class="circle-chart"></div>
-					<!-- Another placeholder for a chart -->
-				</div>
-
-                <div class="container">
-  <div class="card">
-    <h2>Spending Reports</h2>
-    <canvas id="myChart" width="400" height="200"></canvas>
-    <!-- Placeholder for additional charts -->
-    <div id="report-display">
-      <p>View your spending patterns, savings, and income vs. expenses here.</p>
-    </div>
-    <button type="button" id="generateReportButton">Generate Report</button>
-  </div>
-</div>
-
-
-				<!-- Placeholder for getting and showing reports -->
+				<!-- Report display section for text-based summaries -->
 				<div id="report-display">
-					<p>View your spending patterns and budget summaries here.</p>
-					<!-- Reports like charts and summaries will be shown here -->
+					<p>
+						View your spending patterns, savings, and income vs. expenses here.
+					</p>
 				</div>
 
 				<!-- Button to generate a report -->
-				<button type="button">Generate Report</button>
+				<button type="button" id="generateReportButton">Generate Report</button>
 			</div>
-			<!-- End of Reports Card -->
 		</div>
 		<!-- End of Main Container -->
 
@@ -74,8 +53,9 @@
 				<a href="#">support@budgettrackerapp.com</a>
 			</p>
 		</footer>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+		<!-- Chart.js Library -->
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 		<script src="app.js"></script>
 	</body>
 </html>
