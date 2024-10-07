@@ -290,6 +290,9 @@ document.addEventListener("DOMContentLoaded", function () {
 			);
 			const remainingBudget = income - totalExpenses;
 
+			// Remove the placeholder styling
+			reportDisplay.classList.remove("placeholder");
+
 			reportDisplay.innerHTML = `
                 <p><strong>Total Income:</strong> ${income} Ksh</p>
                 <p><strong>Total Expenses:</strong> ${totalExpenses} Ksh</p>

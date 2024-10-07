@@ -257,3 +257,36 @@ button:hover {
 	height: 300px;
 	margin-top: 20px;
 }
+
+#report-display {
+	text-align: center;
+	padding: 20px;
+	border-radius: 10px;
+	background-color: #f2e6f7; /* Soft pastel purple */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	margin-top: 20px;
+}
+
+#report-display.placeholder p {
+	color: #999; /* Soft grey to indicate it's a placeholder */
+}
+
+#report-display img {
+	margin-top: 10px;
+	max-width: 100px;
+	opacity: 0.5; /* Lighter image as a background illustration */
+}
+
+#generateReportButton {
+	margin-top: 20px;
+	padding: 10px 20px;
+	border-radius: 5px;
+	background-color: #4caf50;
+	color: white;
+	border: none;
+	cursor: pointer;
+}
+
+#generateReportButton:hover {
+	background-color: #45a049;
+}
