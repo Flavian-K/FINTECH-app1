@@ -2,12 +2,11 @@ document.addEventListener("DOMContentLoaded", function () {
 	// Get the current page's pathname
 	const currentPage = window.location.pathname;
 
-	// Login form section (Fix: Define loginForm before using it)
+	// Login form section
 	if (currentPage.includes("login.html")) {
-		const loginForm = document.querySelector("#login-form"); // Select the login form by its ID
+		const loginForm = document.querySelector("#login-form");
 
 		if (loginForm) {
-			// Check if loginForm exists
 			loginForm.addEventListener("submit", function (event) {
 				event.preventDefault();
 
@@ -44,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		function renderIncome() {
 			const incomeDisplay = document.getElementById("income-value");
 			if (incomeDisplay) {
-				incomeDisplay.textContent = income; // Fix: Ensure income display element exists before using it
+				incomeDisplay.textContent = income;
 			}
 		}
 
@@ -59,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				if (incomeAmount) {
 					income = parseFloat(incomeAmount);
 					localStorage.setItem("income", JSON.stringify(income));
-					renderIncome(); // Update the displayed income
+					renderIncome();
 				} else {
 					alert("Please enter an income amount.");
 				}
@@ -82,95 +81,135 @@ document.addEventListener("DOMContentLoaded", function () {
 					deleteCategory(index);
 				});
 
-				li.appendChild(deleteButton); // Append the delete button to the list item
-				budgetList.appendChild(li); // Append the list item to the list
+				li.appendChild(deleteButton);
+				budgetList.appendChild(li);
 			});
 		}
 
 		function deleteCategory(index) {
-			budgetCategories.splice(index, 1); // Remove the item at the specified index
+			budgetCategories.splice(index, 1);
 			localStorage.setItem(
 				"budgetCategories",
 				JSON.stringify(budgetCategories)
 			);
-			renderBudgetCategories(); // Re-render the list to reflect the changes
+			renderBudgetCategories();
 		}
 
 		if (budgetForm) {
-			// Handle form submission for adding a budget category
 			budgetForm.addEventListener("submit", function (event) {
 				event.preventDefault();
 
-				// Get the input values from the form
 				const categoryName = budgetForm.querySelector("#category").value.trim();
 				const allocatedAmount = budgetForm
 					.querySelector("#amount")
 					.value.trim();
 
-				// Ensure both fields are filled
 				if (categoryName && allocatedAmount) {
-					// Create a budget category object
 					const budgetCategory = {
 						name: categoryName,
 						amount: allocatedAmount,
 					};
 
-					// Add the new category to the budgetCategories array
 					budgetCategories.push(budgetCategory);
-
-					// Save the updated budgetCategories array to localStorage
 					localStorage.setItem(
 						"budgetCategories",
 						JSON.stringify(budgetCategories)
 					);
-
-					// Re-render the budget categories list
 					renderBudgetCategories();
-
-					// Reset the form fields after submission
 					budgetForm.reset();
 				} else {
-					console.error("Please fill in both fields.");
+					alert("Please fill in both fields.");
 				}
 			});
 
-			// Initial render of budget categories on page load
 			renderBudgetCategories();
 		}
 	}
 
-	// Password validation only on the registration page
+	// Expense Tracking Section
+	else if (currentPage.includes("expenses.html")) {
+		const expenseForm = document.querySelector("#expenseForm");
+		let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+
+		function renderExpenses() {
+			const expenseList = document.getElementById("expenseList");
+			expenseList.innerHTML = ""; // Clear the current expense list
+
+			expenses.forEach(function (expense, index) {
+				const expenseItem = document.createElement("p");
+				expenseItem.textContent = `${expense.category}: ${expense.amount} Ksh`;
+
+				const deleteButton = document.createElement("button");
+				deleteButton.textContent = "Delete";
+				deleteButton.style.marginLeft = "10px";
+
+				deleteButton.addEventListener("click", function () {
+					deleteExpense(index);
+				});
+
+				expenseItem.appendChild(deleteButton);
+				expenseList.appendChild(expenseItem);
+			});
+		}
+
+		function deleteExpense(index) {
+			expenses.splice(index, 1);
+			localStorage.setItem("expenses", JSON.stringify(expenses));
+			renderExpenses();
+		}
+
+		if (expenseForm) {
+			expenseForm.addEventListener("submit", function (event) {
+				event.preventDefault();
+
+				const category = document
+					.getElementById("expense-category")
+					.value.trim();
+				const amount = document.getElementById("expense-amount").value.trim();
+
+				if (category && amount) {
+					const expense = {
+						category: category,
+						amount: amount,
+					};
+
+					expenses.push(expense);
+					localStorage.setItem("expenses", JSON.stringify(expenses));
+					renderExpenses();
+					expenseForm.reset();
+				} else {
+					alert("Please fill out both fields.");
+				}
+			});
+
+			renderExpenses();
+		}
+	}
+
+	// Password validation on the registration page
 	else if (currentPage.includes("registration.html")) {
 		const registerForm = document.querySelector("#register-form");
 		const usernameInput = document.querySelector("#register-username");
 		const passwordInput = document.querySelector("#register-password");
 
 		if (registerForm) {
-			// Listen for form submission
 			registerForm.addEventListener("submit", function (event) {
 				event.preventDefault();
 
-				// Get the input values
 				const username = usernameInput.value.trim();
 				const password = passwordInput.value.trim();
 
-				// Validate the password before proceeding
 				if (!validatePassword(password)) {
-					return; // Stop the registration if the password is not valid
+					return;
 				}
 
-				// Save the user information in localStorage
 				const user = {
 					username: username,
-					password: password, // Ideally, this would be hashed in a real-world application
+					password: password,
 				};
 
-				localStorage.setItem("registeredUser", JSON.stringify(user));
-
-				// Notify the user of successful registration
+				localStorage.setItem(username, JSON.stringify(user));
 				alert("Registration successful!");
-
-				// Redirect to the login page
 				window.location.href = "login.html";
 			});
 		}
@@ -207,6 +246,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		return true;
 	}
 
+	// Reports section
 	if (currentPage.includes("reports.html")) {
 		const generateReportButton = document.getElementById(
 			"generateReportButton"
@@ -220,7 +260,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		function generateChart(totalIncome, totalExpenses, remainingBudget) {
 			const ctx = document.getElementById("myChart").getContext("2d");
 			new Chart(ctx, {
-				type: "bar", // or 'pie' for pie chart
+				type: "bar",
 				data: {
 					labels: ["Income", "Expenses", "Remaining Budget"],
 					datasets: [
@@ -244,21 +284,18 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 
 		function calculateTotals() {
-			// Calculate total budget and total expenses
 			const totalExpenses = expenses.reduce(
 				(total, expense) => total + parseFloat(expense.amount),
 				0
 			);
 			const remainingBudget = income - totalExpenses;
 
-			// Clear previous report
 			reportDisplay.innerHTML = `
                 <p><strong>Total Income:</strong> ${income} Ksh</p>
                 <p><strong>Total Expenses:</strong> ${totalExpenses} Ksh</p>
                 <p><strong>Remaining Budget:</strong> ${remainingBudget} Ksh</p>
             `;
 
-			// Generate the chart
 			generateChart(income, totalExpenses, remainingBudget);
 		}
 
