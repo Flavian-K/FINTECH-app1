@@ -224,59 +224,44 @@ button:hover {
 
 /* General card styling to match the rest of the app */
 .card {
-	padding: 20px;
-	margin: 20px auto;
+	margin: 0px auto;
 	background-color: #f2e6f7; /* Soft pastel purple or any shade closer to the background */
-	padding: 20px;
 	border-radius: 10px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-	max-width: 600px;
+	max-width: 400px;
 	text-align: center;
 }
 
-/* Adjust spacing around charts and reports */
-#report-display {
-	margin: 20px 0;
-}
-
-button {
-	background-color: #d3e4f1; /* Match app color scheme */
-	padding: 10px 20px;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
-}
-
-button:hover {
-	background-color: #c2d8eb; /* Slightly darker on hover */
-}
-
-/* Ensure chart takes up proper space */
-#chart-container {
-	width: 100%;
-	height: 300px;
-	margin-top: 20px;
-}
-
+/* Styles for report display area */
 #report-display {
 	text-align: center;
-	padding: 20px;
+	padding: 10px; /* Reduced padding for a tighter look */
 	border-radius: 10px;
 	background-color: #f2e6f7; /* Soft pastel purple */
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-	margin-top: 20px;
-}
-
-#report-display.placeholder p {
-	color: #999; /* Soft grey to indicate it's a placeholder */
-}
-
-#report-display img {
 	margin-top: 10px;
-	max-width: 100px;
-	opacity: 0.5; /* Lighter image as a background illustration */
+	min-height: 150px; /* Reduced minimum height for balance */
+	display: flex;
+	flex-direction: column;
+	justify-content: center; /* Center the content vertically */
+	align-items: center; /* Center the content horizontally */
 }
 
+/* Placeholder text and image before report generation */
+#report-display.placeholder p {
+	color: #999;
+	font-size: 16px;
+}
+
+/* Image styling to limit its size */
+#report-display img {
+	max-width: 100px; /* Reduced size for a more balanced look */
+	max-height: 60px;
+	margin-top: 10px; /* Spacing between text and image */
+	opacity: 0.7; /* Slightly reduce opacity for a background-like effect */
+}
+
+/* Style the button */
 #generateReportButton {
 	margin-top: 20px;
 	padding: 10px 20px;
@@ -289,4 +274,11 @@ button:hover {
 
 #generateReportButton:hover {
 	background-color: #45a049;
+}
+
+/* Flex container for the chart */
+#chart-container {
+	width: 100%;
+	height: 300px;
+	margin-top: 20px;
 }
