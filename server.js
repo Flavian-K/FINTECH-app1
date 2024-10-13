@@ -76,7 +76,8 @@ app.post("/login", async (req, res) => {
 
 // Middleware to verify JWT and protect routes
 function authenticateToken(req, res, next) {
-	const token = req.headers["authorization"];
+	const authHeader = req.headers["authorization"];
+	const token = authHeader && authHeader.split(" ")[1]; // Bearer token format
 	if (!token) return res.status(401).send("Access denied");
 
 	jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
@@ -121,6 +122,25 @@ app.get("/expenses", authenticateToken, async (req, res) => {
 		res.json(expenses);
 	} catch (error) {
 		res.status(500).json({ error: "Error fetching expenses", details: error });
+	}
+});
+
+// Route to update a user's password
+app.put("/users/:id/password", async (req, res) => {
+	try {
+		const { password } = req.body;
+		const hashedPassword = await bcrypt.hash(password, 10); // Hash the new password
+		const updatedUser = await User.findByIdAndUpdate(
+			req.params.id,
+			{ password: hashedPassword },
+			{ new: true } // Return the updated user
+		);
+		if (!updatedUser) {
+			return res.status(404).send("User not found.");
+		}
+		res.json({ message: "Password updated successfully", updatedUser });
+	} catch (error) {
+		res.status(500).json({ error: "Error updating password", details: error });
 	}
 });
 
