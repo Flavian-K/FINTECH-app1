@@ -154,3 +154,9 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}`);
 });
+
+// Logout route to invalidate JWT
+app.post("/logout", (req, res) => {
+	// To 'logout', we can send an empty response or clear JWT on the client side
+	res.status(200).json({ message: "Logged out successfully" });
+});
