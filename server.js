@@ -3,6 +3,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt"); // For password hashing
 const jwt = require("jsonwebtoken"); // For generating JWT
+const nodemailer = require("nodemailer"); // For sending emails
+const crypto = require("crypto"); // For generating random tokens
 const User = require("./models/user.model"); // Import User model
 const Expense = require("./models/expense.model"); // Import Expense model
 
@@ -23,6 +25,84 @@ mongoose
 	.catch((error) => {
 		console.error("Error connecting to MongoDB:", error);
 	});
+
+// Nodemailer transporter setup
+const transporter = nodemailer.createTransport({
+	service: "gmail", // or your preferred email provider
+	auth: {
+		user: process.env.EMAIL_USER, // Your email
+		pass: process.env.EMAIL_PASS, // Your email password
+	},
+});
+
+// Password reset request route
+app.post("/forgot-password", async (req, res) => {
+	try {
+		const { email } = req.body;
+		const user = await User.findOne({ username: email });
+		if (!user) {
+			return res.status(400).json({ message: "User not found" });
+		}
+
+		// Generate a reset token and expiry time
+		const resetToken = crypto.randomBytes(32).toString("hex");
+		const resetTokenExpiry = Date.now() + 3600000; // Token valid for 1 hour
+
+		user.resetPasswordToken = resetToken;
+		user.resetPasswordExpires = resetTokenExpiry;
+		await user.save();
+
+		const resetUrl = `${req.protocol}://${req.get(
+			"host"
+		)}/reset-password/${resetToken}`;
+
+		// Send password reset email
+		const mailOptions = {
+			to: email,
+			from: process.env.EMAIL_USER,
+			subject: "Password Reset",
+			text: `You requested a password reset. Click this link to reset your password: ${resetUrl}`,
+		};
+
+		transporter.sendMail(mailOptions, (err, info) => {
+			if (err) {
+				return res.status(500).json({ message: "Error sending email", err });
+			}
+			res.status(200).json({ message: "Password reset email sent" });
+		});
+	} catch (error) {
+		res.status(500).json({ message: "Error processing request", error });
+	}
+});
+
+// Password reset route
+app.post("/reset-password/:token", async (req, res) => {
+	try {
+		const { token } = req.params;
+		const { password } = req.body;
+
+		// Find user by reset token and check expiry
+		const user = await User.findOne({
+			resetPasswordToken: token,
+			resetPasswordExpires: { $gt: Date.now() }, // Check if token is still valid
+		});
+
+		if (!user) {
+			return res.status(400).json({ message: "Invalid or expired token" });
+		}
+
+		// Hash the new password and save it
+		const hashedPassword = await bcrypt.hash(password, 10);
+		user.password = hashedPassword;
+		user.resetPasswordToken = undefined; // Clear reset token and expiry
+		user.resetPasswordExpires = undefined;
+
+		await user.save();
+		res.status(200).json({ message: "Password reset successfully" });
+	} catch (error) {
+		res.status(500).json({ message: "Error resetting password", error });
+	}
+});
 
 // User registration route (Register new users with hashed password)
 app.post("/register", async (req, res) => {
@@ -116,22 +196,20 @@ app.get("/users", async (req, res) => {
 // Route to get all expenses (protected by authentication)
 app.get("/expenses", authenticateToken, async (req, res) => {
 	try {
-		const expenses = await Expense.find({ userId: req.user.userId }).populate(
-			"userId"
-		);
+		const expenses = await Expense.find({ userId: req.user.userId });
 		res.json(expenses);
 	} catch (error) {
 		res.status(500).json({ error: "Error fetching expenses", details: error });
 	}
 });
 
-// Route to update a user's password
-app.put("/users/:id/password", async (req, res) => {
+// Route to update a user's password (protected by authentication)
+app.put("/users/password", authenticateToken, async (req, res) => {
 	try {
 		const { password } = req.body;
 		const hashedPassword = await bcrypt.hash(password, 10); // Hash the new password
 		const updatedUser = await User.findByIdAndUpdate(
-			req.params.id,
+			req.user.userId,
 			{ password: hashedPassword },
 			{ new: true } // Return the updated user
 		);
