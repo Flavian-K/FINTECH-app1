@@ -316,3 +316,22 @@ button:hover {
 		gap: 20px;
 	}
 }
+
+/* Dark mode styles */
+body.dark-mode {
+	background: #333;
+	color: #f2f2f2;
+}
+
+.card.dark-mode {
+	background-color: rgba(0, 0, 0, 0.8);
+}
+
+button.dark-mode {
+	background-color: #555;
+	color: #f2f2f2;
+}
+
+button.dark-mode:hover {
+	background-color: #444;
+}
