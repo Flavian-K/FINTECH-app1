@@ -246,6 +246,23 @@ document.addEventListener("DOMContentLoaded", function () {
 		return true;
 	}
 
+	// Dark Mode Toggle Functionality
+	const darkModeToggle = document.getElementById("darkModeToggle");
+
+	if (darkModeToggle) {
+		darkModeToggle.addEventListener("click", function () {
+			document.body.classList.toggle("dark-mode");
+
+			// Toggle dark mode for other elements like header, nav, cards, and footer
+			document.querySelector("header").classList.toggle("dark-mode");
+			document.querySelector("nav").classList.toggle("dark-mode");
+			document.querySelectorAll(".card").forEach((card) => {
+				card.classList.toggle("dark-mode");
+			});
+			document.querySelector("footer").classList.toggle("dark-mode");
+		});
+	}
+
 	// Reports section
 	if (currentPage.includes("reports.html")) {
 		const generateReportButton = document.getElementById(

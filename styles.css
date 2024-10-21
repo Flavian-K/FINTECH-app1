@@ -335,3 +335,26 @@ button.dark-mode {
 button.dark-mode:hover {
 	background-color: #444;
 }
+
+/* Dark Mode Styles */
+body.dark-mode {
+	background: #333; /* Dark background */
+	color: #f2f2f2; /* Light text */
+}
+
+header.dark-mode,
+nav.dark-mode,
+.card.dark-mode,
+footer.dark-mode {
+	background-color: #444;
+	color: #f2f2f2;
+}
+
+button.dark-mode {
+	background-color: #555;
+	color: #f2f2f2;
+}
+
+button.dark-mode:hover {
+	background-color: #666;
+}
