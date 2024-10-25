@@ -5,13 +5,15 @@ const bcrypt = require("bcrypt"); // For password hashing
 const jwt = require("jsonwebtoken"); // For generating JWT
 const nodemailer = require("nodemailer"); // For sending emails
 const crypto = require("crypto"); // For generating random tokens
+const cookieParser = require("cookie-parser"); // Middleware for parsing cookies
 const User = require("./models/user.model"); // Import User model
 const Expense = require("./models/expense.model"); // Import Expense model
 
 const app = express();
 
-// Middleware to parse JSON bodies
+// Middleware to parse JSON bodies and cookies
 app.use(express.json());
+app.use(cookieParser()); // Add middleware to parse cookies
 
 // Connect to MongoDB Atlas using connection string from .env file
 mongoose
@@ -126,7 +128,7 @@ app.post("/register", async (req, res) => {
 	}
 });
 
-// User login route with JWT generation
+// User login route with JWT generation and setting JWT in cookie
 app.post("/login", async (req, res) => {
 	try {
 		const { username, password } = req.body;
@@ -143,21 +145,27 @@ app.post("/login", async (req, res) => {
 			return res.status(400).send("Invalid password.");
 		}
 
-		// Generate a JWT token if login is successful
+		// Generate a JWT token
 		const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
 			expiresIn: "1h", // Token expires in 1 hour
 		});
 
-		res.status(200).json({ message: "Login successful", token });
+		// Set the JWT as a cookie
+		res.cookie("token", token, {
+			httpOnly: true,
+			secure: true,
+			sameSite: "strict",
+		});
+
+		res.status(200).json({ message: "Login successful" });
 	} catch (error) {
 		res.status(500).json({ error: "Error logging in", details: error });
 	}
 });
 
-// Middleware to verify JWT and protect routes
+// Middleware to verify JWT from cookies
 function authenticateToken(req, res, next) {
-	const authHeader = req.headers["authorization"];
-	const token = authHeader && authHeader.split(" ")[1]; // Bearer token format
+	const token = req.cookies.token; // Get token from the cookie
 	if (!token) return res.status(401).send("Access denied");
 
 	jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
@@ -169,6 +177,7 @@ function authenticateToken(req, res, next) {
 
 // Route to create a new expense (protected by authentication)
 app.post("/expenses", authenticateToken, async (req, res) => {
+	// This route is now protected by JWT middleware
 	try {
 		const { category, amount } = req.body;
 		const newExpense = new Expense({
@@ -236,5 +245,6 @@ app.listen(PORT, () => {
 // Logout route to invalidate JWT
 app.post("/logout", (req, res) => {
 	// To 'logout', we can send an empty response or clear JWT on the client side
+	res.clearCookie("token"); // Clear the JWT cookie
 	res.status(200).json({ message: "Logged out successfully" });
 });
