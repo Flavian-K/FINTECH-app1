@@ -1,4 +1,4 @@
-require("dotenv").config(); // Load environment variables from .env file
+require("dotenv").config({ path: "../.env" }); // Load environment variables from .env file
 const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt"); // For password hashing
@@ -17,10 +17,7 @@ app.use(cookieParser()); // Add middleware to parse cookies
 
 // Connect to MongoDB Atlas using connection string from .env file
 mongoose
-	.connect(process.env.MONGODB_URI, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	})
+	.connect(process.env.MONGODB_URI)
 	.then(() => {
 		console.log("Successfully connected to MongoDB!");
 	})
@@ -110,20 +107,26 @@ app.post("/reset-password/:token", async (req, res) => {
 app.post("/register", async (req, res) => {
 	try {
 		const { username, password } = req.body;
+		console.log("Received registration data:", { username, password }); // Debugging line
 
 		// Check if user already exists
 		const existingUser = await User.findOne({ username });
 		if (existingUser) {
+			console.log("User already exists.");
 			return res.status(400).send("User already exists.");
 		}
 
 		// Hash the password before saving
 		const hashedPassword = await bcrypt.hash(password, 10); // Salt rounds = 10
 		const newUser = new User({ username, password: hashedPassword });
+
+		console.log("New user to be saved:", newUser); // Debugging line
 		await newUser.save();
+		console.log("User saved successfully!");
 
 		res.status(201).json({ message: "User registered successfully", newUser });
 	} catch (error) {
+		console.error("Error creating user:", error); // More verbose error logging
 		res.status(500).json({ error: "Error creating user", details: error });
 	}
 });
@@ -233,6 +236,7 @@ app.put("/users/password", authenticateToken, async (req, res) => {
 
 // Test route to confirm server is running
 app.get("/", (req, res) => {
+	console.log("Root route accessed");
 	res.send("Server is up and running");
 });
 
