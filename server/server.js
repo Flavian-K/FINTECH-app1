@@ -6,13 +6,15 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const cookieParser = require("cookie-parser");
+const cors = require("cors"); // Import cors package
 const User = require("./models/user.model");
 
 const app = express();
 
-// Middleware to parse JSON bodies and cookies
-app.use(express.json());
-app.use(cookieParser());
+// Middleware to enable CORS for all origins
+app.use(cors()); // Allow all origins
+app.use(express.json()); // Middleware to parse JSON bodies
+app.use(cookieParser()); // Middleware to parse cookies
 
 // Connect to MongoDB Atlas
 mongoose

@@ -186,31 +186,43 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	}
 
-	// Password validation on the registration page
+	// Registration form section
 	else if (currentPage.includes("registration.html")) {
 		const registerForm = document.querySelector("#register-form");
 		const usernameInput = document.querySelector("#register-username");
+		const emailInput = document.querySelector("#register-email");
 		const passwordInput = document.querySelector("#register-password");
 
 		if (registerForm) {
-			registerForm.addEventListener("submit", function (event) {
+			registerForm.addEventListener("submit", async function (event) {
 				event.preventDefault();
 
 				const username = usernameInput.value.trim();
+				const email = emailInput.value.trim();
 				const password = passwordInput.value.trim();
 
 				if (!validatePassword(password)) {
 					return;
 				}
 
-				const user = {
-					username: username,
-					password: password,
-				};
+				try {
+					const response = await fetch("http://localhost:3000/register", {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({ username, email, password }),
+					});
 
-				localStorage.setItem(username, JSON.stringify(user));
-				alert("Registration successful!");
-				window.location.href = "login.html";
+					const result = await response.json();
+					if (response.ok) {
+						alert("Registration successful!");
+						window.location.href = "login.html";
+					} else {
+						alert(result.message || "Registration failed.");
+					}
+				} catch (error) {
+					console.error("Error during registration:", error);
+					alert("An error occurred during registration.");
+				}
 			});
 		}
 	}
@@ -255,7 +267,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 			// Toggle dark mode for other elements like header, nav, cards, and footer
 			document.querySelector("header").classList.toggle("dark-mode");
-			document.querySelector("nav").classList.toggle("dark-mode");
 			document.querySelectorAll(".card").forEach((card) => {
 				card.classList.toggle("dark-mode");
 			});
@@ -292,9 +303,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				},
 				options: {
 					scales: {
-						y: {
-							beginAtZero: true,
-						},
+						y: { beginAtZero: true },
 					},
 				},
 			});
@@ -307,7 +316,6 @@ document.addEventListener("DOMContentLoaded", function () {
 			);
 			const remainingBudget = income - totalExpenses;
 
-			// Remove the placeholder styling
 			reportDisplay.classList.remove("placeholder");
 
 			reportDisplay.innerHTML = `
