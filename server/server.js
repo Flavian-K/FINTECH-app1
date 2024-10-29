@@ -1,21 +1,20 @@
-require("dotenv").config({ path: "../.env" }); // Load environment variables from .env file
+require("dotenv").config({ path: "../.env" });
 const express = require("express");
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt"); // For password hashing
-const jwt = require("jsonwebtoken"); // For generating JWT
-const nodemailer = require("nodemailer"); // For sending emails
-const crypto = require("crypto"); // For generating random tokens
-const cookieParser = require("cookie-parser"); // Middleware for parsing cookies
-const User = require("./models/user.model"); // Import User model
-const Expense = require("./models/expense.model"); // Import Expense model
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
+const cookieParser = require("cookie-parser");
+const User = require("./models/user.model");
 
 const app = express();
 
 // Middleware to parse JSON bodies and cookies
 app.use(express.json());
-app.use(cookieParser()); // Add middleware to parse cookies
+app.use(cookieParser());
 
-// Connect to MongoDB Atlas using connection string from .env file
+// Connect to MongoDB Atlas
 mongoose
 	.connect(process.env.MONGODB_URI)
 	.then(() => {
@@ -27,23 +26,24 @@ mongoose
 
 // Nodemailer transporter setup
 const transporter = nodemailer.createTransport({
-	service: "gmail", // or your preferred email provider
+	service: "gmail",
 	auth: {
-		user: process.env.EMAIL_USER, // Your email
-		pass: process.env.EMAIL_PASS, // Your email password
+		user: process.env.EMAIL_USER,
+		pass: process.env.EMAIL_PASS,
 	},
 });
 
-// Password reset request route
+// Password reset request route using email or username
 app.post("/forgot-password", async (req, res) => {
 	try {
-		const { email } = req.body;
-		const user = await User.findOne({ username: email });
+		const { usernameOrEmail } = req.body;
+		const user = await User.findOne({
+			$or: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
+		});
 		if (!user) {
 			return res.status(400).json({ message: "User not found" });
 		}
 
-		// Generate a reset token and expiry time
 		const resetToken = crypto.randomBytes(32).toString("hex");
 		const resetTokenExpiry = Date.now() + 3600000; // Token valid for 1 hour
 
@@ -55,9 +55,8 @@ app.post("/forgot-password", async (req, res) => {
 			"host"
 		)}/reset-password/${resetToken}`;
 
-		// Send password reset email
 		const mailOptions = {
-			to: email,
+			to: user.email,
 			from: process.env.EMAIL_USER,
 			subject: "Password Reset",
 			text: `You requested a password reset. Click this link to reset your password: ${resetUrl}`,
@@ -80,20 +79,18 @@ app.post("/reset-password/:token", async (req, res) => {
 		const { token } = req.params;
 		const { password } = req.body;
 
-		// Find user by reset token and check expiry
 		const user = await User.findOne({
 			resetPasswordToken: token,
-			resetPasswordExpires: { $gt: Date.now() }, // Check if token is still valid
+			resetPasswordExpires: { $gt: Date.now() },
 		});
 
 		if (!user) {
 			return res.status(400).json({ message: "Invalid or expired token" });
 		}
 
-		// Hash the new password and save it
 		const hashedPassword = await bcrypt.hash(password, 10);
 		user.password = hashedPassword;
-		user.resetPasswordToken = undefined; // Clear reset token and expiry
+		user.resetPasswordToken = undefined;
 		user.resetPasswordExpires = undefined;
 
 		await user.save();
@@ -103,57 +100,45 @@ app.post("/reset-password/:token", async (req, res) => {
 	}
 });
 
-// User registration route (Register new users with hashed password)
+// User registration route
 app.post("/register", async (req, res) => {
 	try {
-		const { username, password } = req.body;
-		console.log("Received registration data:", { username, password }); // Debugging line
+		const { username, email, password } = req.body;
 
-		// Check if user already exists
-		const existingUser = await User.findOne({ username });
+		const existingUser = await User.findOne({ $or: [{ username }, { email }] });
 		if (existingUser) {
-			console.log("User already exists.");
 			return res.status(400).send("User already exists.");
 		}
 
-		// Hash the password before saving
-		const hashedPassword = await bcrypt.hash(password, 10); // Salt rounds = 10
-		const newUser = new User({ username, password: hashedPassword });
-
-		console.log("New user to be saved:", newUser); // Debugging line
+		const hashedPassword = await bcrypt.hash(password, 10);
+		const newUser = new User({ username, email, password: hashedPassword });
 		await newUser.save();
-		console.log("User saved successfully!");
 
 		res.status(201).json({ message: "User registered successfully", newUser });
 	} catch (error) {
-		console.error("Error creating user:", error); // More verbose error logging
 		res.status(500).json({ error: "Error creating user", details: error });
 	}
 });
 
-// User login route with JWT generation and setting JWT in cookie
+// User login route
 app.post("/login", async (req, res) => {
 	try {
 		const { username, password } = req.body;
 
-		// Check if user exists
 		const user = await User.findOne({ username });
 		if (!user) {
 			return res.status(400).send("User does not exist.");
 		}
 
-		// Compare password with hashed password in the database
 		const isPasswordValid = await bcrypt.compare(password, user.password);
 		if (!isPasswordValid) {
 			return res.status(400).send("Invalid password.");
 		}
 
-		// Generate a JWT token
 		const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-			expiresIn: "1h", // Token expires in 1 hour
+			expiresIn: "1h",
 		});
 
-		// Set the JWT as a cookie
 		res.cookie("token", token, {
 			httpOnly: true,
 			secure: true,
@@ -168,87 +153,18 @@ app.post("/login", async (req, res) => {
 
 // Middleware to verify JWT from cookies
 function authenticateToken(req, res, next) {
-	const token = req.cookies.token; // Get token from the cookie
+	const token = req.cookies.token;
 	if (!token) return res.status(401).send("Access denied");
 
 	jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
 		if (err) return res.status(403).send("Invalid token");
-		req.user = user; // Attach user info to request
+		req.user = user;
 		next();
 	});
 }
-
-// Route to create a new expense (protected by authentication)
-app.post("/expenses", authenticateToken, async (req, res) => {
-	// This route is now protected by JWT middleware
-	try {
-		const { category, amount } = req.body;
-		const newExpense = new Expense({
-			userId: req.user.userId,
-			category,
-			amount,
-		});
-		await newExpense.save();
-		res.json({ message: "Expense created successfully", newExpense });
-	} catch (error) {
-		res.status(500).json({ error: "Error creating expense", details: error });
-	}
-});
-
-// Route to get all users (for testing purposes, not protected)
-app.get("/users", async (req, res) => {
-	try {
-		const users = await User.find();
-		res.json(users);
-	} catch (error) {
-		res.status(500).json({ error: "Error fetching users", details: error });
-	}
-});
-
-// Route to get all expenses (protected by authentication)
-app.get("/expenses", authenticateToken, async (req, res) => {
-	try {
-		const expenses = await Expense.find({ userId: req.user.userId });
-		res.json(expenses);
-	} catch (error) {
-		res.status(500).json({ error: "Error fetching expenses", details: error });
-	}
-});
-
-// Route to update a user's password (protected by authentication)
-app.put("/users/password", authenticateToken, async (req, res) => {
-	try {
-		const { password } = req.body;
-		const hashedPassword = await bcrypt.hash(password, 10); // Hash the new password
-		const updatedUser = await User.findByIdAndUpdate(
-			req.user.userId,
-			{ password: hashedPassword },
-			{ new: true } // Return the updated user
-		);
-		if (!updatedUser) {
-			return res.status(404).send("User not found.");
-		}
-		res.json({ message: "Password updated successfully", updatedUser });
-	} catch (error) {
-		res.status(500).json({ error: "Error updating password", details: error });
-	}
-});
-
-// Test route to confirm server is running
-app.get("/", (req, res) => {
-	console.log("Root route accessed");
-	res.send("Server is up and running");
-});
 
 // Set your app to listen on a specific port
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}`);
-});
-
-// Logout route to invalidate JWT
-app.post("/logout", (req, res) => {
-	// To 'logout', we can send an empty response or clear JWT on the client side
-	res.clearCookie("token"); // Clear the JWT cookie
-	res.status(200).json({ message: "Logged out successfully" });
 });

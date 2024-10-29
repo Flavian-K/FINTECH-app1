@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 // Define the schema for users
 const userSchema = new mongoose.Schema({
 	username: { type: String, required: true, unique: true },
+	email: { type: String, required: true, unique: true }, // Email for password recovery
 	password: { type: String, required: true }, // Hashed password
 	resetPasswordToken: String, // Token for password reset functionality
 	resetPasswordExpires: Date, // Expiry time for the reset token
