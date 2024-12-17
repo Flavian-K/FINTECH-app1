@@ -1,5 +1,5 @@
-// src/components/Reports.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Chart } from "chart.js/auto";
 
 function Reports() {
@@ -8,6 +8,9 @@ function Reports() {
 		expenses: JSON.parse(localStorage.getItem("expenses")) || [],
 		remainingBudget: 0,
 	});
+
+	const [chartInstance, setChartInstance] = useState(null);
+	const [darkMode, setDarkMode] = useState(false);
 
 	// Generate report with dynamic data
 	const generateReport = () => {
@@ -25,7 +28,13 @@ function Reports() {
 	// Render Chart with Chart.js
 	const renderChart = (income, expenses, remainingBudget) => {
 		const ctx = document.getElementById("myChart").getContext("2d");
-		new Chart(ctx, {
+
+		// Destroy old chart instance if it exists
+		if (chartInstance) {
+			chartInstance.destroy();
+		}
+
+		const newChart = new Chart(ctx, {
 			type: "bar",
 			data: {
 				labels: ["Income", "Expenses", "Remaining Budget"],
@@ -45,35 +54,49 @@ function Reports() {
 				},
 			},
 		});
+
+		setChartInstance(newChart);
 	};
 
+	// Toggle dark mode
+	const toggleDarkMode = () => {
+		setDarkMode((prev) => !prev);
+	};
+
+	useEffect(() => {
+		// Cleanup chart instance on unmount
+		return () => {
+			if (chartInstance) chartInstance.destroy();
+		};
+	}, [chartInstance]);
+
 	return (
-		<div>
+		<div className={darkMode ? "dark-mode" : ""}>
 			{/* Header */}
 			<header>
 				<h1>Budget Tracker App</h1>
 			</header>
 
 			{/* Dark Mode Toggle Button */}
-			<button>Toggle Dark Mode</button>
+			<button onClick={toggleDarkMode}>Toggle Dark Mode</button>
 
 			{/* Navigation */}
 			<nav>
 				<ul>
 					<li>
-						<a href="/home">Home</a>
+						<Link to="/">Home</Link>
 					</li>
 					<li>
-						<a href="/budget">Budget</a>
+						<Link to="/budget">Budget</Link>
 					</li>
 					<li>
-						<a href="/expenses">Expenses</a>
+						<Link to="/expenses">Expenses</Link>
 					</li>
 					<li>
-						<a href="/reports">Reports</a>
+						<Link to="/reports">Reports</Link>
 					</li>
 					<li>
-						<a href="/settings">Settings</a>
+						<Link to="/settings">Settings</Link>
 					</li>
 				</ul>
 			</nav>
@@ -91,7 +114,11 @@ function Reports() {
 						<p>
 							Click "Generate Report" to view your detailed spending breakdown.
 						</p>
-						<img src="reports.jpg" alt="Report Illustration" />
+						<img
+							src="reports.jpg"
+							alt="Report Illustration"
+							style={{ width: "100px", marginTop: "10px" }}
+						/>
 					</div>
 
 					<button onClick={generateReport}>Generate Report</button>
@@ -102,7 +129,10 @@ function Reports() {
 			<footer>
 				<p>&copy; 2024 Budget Tracker App. All rights reserved.</p>
 				<p>
-					Contact us at: <a href="#">support@budgettrackerapp.com</a>
+					Contact us at:{" "}
+					<a href="mailto:support@budgettrackerapp.com">
+						support@budgettrackerapp.com
+					</a>
 				</p>
 			</footer>
 		</div>

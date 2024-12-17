@@ -1,12 +1,12 @@
-// src/components/Budget.js
-
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Budget() {
 	const [category, setCategory] = useState("");
 	const [amount, setAmount] = useState("");
 	const [budgetCategories, setBudgetCategories] = useState([]);
 	const [income, setIncome] = useState(0);
+	const [darkMode, setDarkMode] = useState(false);
 
 	// Add a new budget category
 	const handleAddCategory = (e) => {
@@ -29,33 +29,38 @@ function Budget() {
 		}
 	};
 
+	// Toggle dark mode
+	const toggleDarkMode = () => {
+		setDarkMode((prev) => !prev);
+	};
+
 	return (
-		<div>
+		<div className={darkMode ? "dark-mode" : ""}>
 			{/* Header */}
 			<header>
 				<h1>Budget Tracker App</h1>
 			</header>
 
 			{/* Dark Mode Toggle Button */}
-			<button>Toggle Dark Mode</button>
+			<button onClick={toggleDarkMode}>Toggle Dark Mode</button>
 
 			{/* Navigation */}
 			<nav>
 				<ul>
 					<li>
-						<a href="/">Home</a>
+						<Link to="/">Home</Link>
 					</li>
 					<li>
-						<a href="/budget">Budget</a>
+						<Link to="/budget">Budget</Link>
 					</li>
 					<li>
-						<a href="/expenses">Expenses</a>
+						<Link to="/expenses">Expenses</Link>
 					</li>
 					<li>
-						<a href="/reports">Reports</a>
+						<Link to="/reports">Reports</Link>
 					</li>
 					<li>
-						<a href="/settings">Settings</a>
+						<Link to="/settings">Settings</Link>
 					</li>
 				</ul>
 			</nav>
@@ -105,7 +110,7 @@ function Budget() {
 						type="number"
 						id="income-amount"
 						value={income}
-						onChange={(e) => setIncome(e.target.value)}
+						onChange={(e) => setIncome(parseFloat(e.target.value) || 0)}
 						placeholder="Enter your income"
 					/>
 					<button type="submit">Add Income</button>
@@ -122,7 +127,10 @@ function Budget() {
 			<footer>
 				<p>&copy; 2024 Budget Tracker App. All rights reserved.</p>
 				<p>
-					Contact us at: <a href="#">support@budgettrackerapp.com</a>
+					Contact us at:{" "}
+					<a href="mailto:support@budgettrackerapp.com">
+						support@budgettrackerapp.com
+					</a>
 				</p>
 			</footer>
 		</div>

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Expenses() {
 	const [category, setCategory] = useState("");
 	const [amount, setAmount] = useState("");
 	const [expenses, setExpenses] = useState([]);
+	const [darkMode, setDarkMode] = useState(false);
 
 	// Add a new expense
 	const handleAddExpense = (e) => {
@@ -15,33 +17,38 @@ function Expenses() {
 		}
 	};
 
+	// Toggle dark mode
+	const toggleDarkMode = () => {
+		setDarkMode((prev) => !prev);
+	};
+
 	return (
-		<div>
+		<div className={darkMode ? "dark-mode" : ""}>
 			{/* Header */}
 			<header>
 				<h1>Budget Tracker App</h1>
 			</header>
 
 			{/* Dark Mode Toggle Button */}
-			<button>Toggle Dark Mode</button>
+			<button onClick={toggleDarkMode}>Toggle Dark Mode</button>
 
 			{/* Navigation */}
 			<nav>
 				<ul>
 					<li>
-						<a href="/">Home</a>
+						<Link to="/">Home</Link>
 					</li>
 					<li>
-						<a href="/budget">Budget</a>
+						<Link to="/budget">Budget</Link>
 					</li>
 					<li>
-						<a href="/expenses">Expenses</a>
+						<Link to="/expenses">Expenses</Link>
 					</li>
 					<li>
-						<a href="/reports">Reports</a>
+						<Link to="/reports">Reports</Link>
 					</li>
 					<li>
-						<a href="/settings">Settings</a>
+						<Link to="/settings">Settings</Link>
 					</li>
 				</ul>
 			</nav>
@@ -88,7 +95,10 @@ function Expenses() {
 			<footer>
 				<p>&copy; 2024 Budget Tracker App. All rights reserved.</p>
 				<p>
-					Contact us at: <a href="#">support@budgettrackerapp.com</a>
+					Contact us at:{" "}
+					<a href="mailto:support@budgettrackerapp.com">
+						support@budgettrackerapp.com
+					</a>
 				</p>
 			</footer>
 		</div>

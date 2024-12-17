@@ -1,82 +1,84 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Login() {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
+	const navigate = useNavigate();
 
-	// Handle form submission for login
 	const handleLogin = async (e) => {
 		e.preventDefault();
-
 		try {
-			const response = await fetch("http://localhost:3000/login", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ username, password }),
+			const response = await axios.post("http://localhost:3001/login", {
+				username,
+				password,
 			});
 
-			const data = await response.json();
-
-			if (response.ok) {
-				alert("Login successful!");
-				// Redirect to the home page or other page after successful login
-				window.location.href = "/home";
-			} else {
-				alert(data.message || "Login failed.");
-			}
+			// Store login status and token in sessionStorage
+			sessionStorage.setItem("loggedInUser", username);
+			alert("Login successful!");
+			navigate("/dashboard");
 		} catch (error) {
-			console.error("Error during login:", error);
-			alert("An error occurred during login.");
+			alert("Invalid username or password. Please try again.");
+			console.error(error);
 		}
 	};
 
 	return (
 		<div>
-			{/* Header */}
 			<header>
 				<h1>Budget Tracker App</h1>
 			</header>
 
-			{/* Dark Mode Toggle Button */}
-			<button>Toggle Dark Mode</button>
+			<div
+				className="card"
+				style={{ margin: "20px auto", textAlign: "center" }}
+			>
+				<h2>Login</h2>
+				<form onSubmit={handleLogin}>
+					<label htmlFor="username">Username:</label>
+					<input
+						type="text"
+						id="username"
+						value={username}
+						onChange={(e) => setUsername(e.target.value)}
+						placeholder="Enter your username"
+						required
+					/>
 
-			{/* Main Container */}
-			<div className="container">
-				{/* Login Card */}
-				<div className="card">
-					<h2>Login</h2>
-					<form onSubmit={handleLogin}>
-						<label htmlFor="login-username">Username:</label>
-						<input
-							type="text"
-							id="login-username"
-							value={username}
-							onChange={(e) => setUsername(e.target.value)}
-							required
-						/>
+					<label htmlFor="password">Password:</label>
+					<input
+						type="password"
+						id="password"
+						value={password}
+						onChange={(e) => setPassword(e.target.value)}
+						placeholder="Enter your password"
+						required
+					/>
 
-						<label htmlFor="login-password">Password:</label>
-						<input
-							type="password"
-							id="login-password"
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
-							required
-						/>
+					<button type="submit">Login</button>
+				</form>
 
-						<button type="submit">Login</button>
-					</form>
+				{/* Forgot Password Button */}
+				<div style={{ marginTop: "10px" }}>
+					<Link to="/forgot-password">
+						<button
+							style={{
+								background: "none",
+								color: "blue",
+								border: "none",
+								cursor: "pointer",
+							}}
+						>
+							Forgot Password?
+						</button>
+					</Link>
 				</div>
 			</div>
 
-			{/* Footer */}
 			<footer>
 				<p>&copy; 2024 Budget Tracker App. All rights reserved.</p>
-				<p>
-					Contact us at: <a href="#">support@budgettrackerapp.com</a>
-				</p>
 			</footer>
 		</div>
 	);
