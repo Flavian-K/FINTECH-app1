@@ -1,40 +1,55 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Chart } from "chart.js/auto";
+import React, { useState, useEffect, useRef } from "react";
+import Chart from "chart.js/auto";
 
 function Reports() {
-	const [reportData, setReportData] = useState({
-		income: JSON.parse(localStorage.getItem("income")) || 0,
-		expenses: JSON.parse(localStorage.getItem("expenses")) || [],
-		remainingBudget: 0,
-	});
+	const [incomeList, setIncomeList] = useState([]);
+	const [expensesList, setExpensesList] = useState([]);
+	const [totalIncome, setTotalIncome] = useState(0);
+	const [totalExpenses, setTotalExpenses] = useState(0);
+	const [remainingBudget, setRemainingBudget] = useState(0);
+	const chartRef = useRef(null);
 
-	const [chartInstance, setChartInstance] = useState(null);
-	const [darkMode, setDarkMode] = useState(false);
+	// Fetch data from localStorage
+	useEffect(() => {
+		// Fetch income and expenses lists
+		const incomeData = JSON.parse(localStorage.getItem("incomeList")) || [];
+		const expensesData = JSON.parse(localStorage.getItem("expensesList")) || [];
 
-	// Generate report with dynamic data
-	const generateReport = () => {
-		const income = reportData.income;
-		const totalExpenses = reportData.expenses.reduce(
-			(total, expense) => total + parseFloat(expense.amount || 0),
+		// Calculate total income and expenses
+		const totalIncome = incomeData.reduce(
+			(total, item) => total + (item.amount || 0),
 			0
 		);
-		const remainingBudget = income - totalExpenses;
 
-		setReportData({ income, expenses: totalExpenses, remainingBudget });
-		renderChart(income, totalExpenses, remainingBudget);
-	};
+		const totalExpenses = expensesData.reduce(
+			(total, item) => total + (item.amount || 0),
+			0
+		);
 
-	// Render Chart with Chart.js
+		// Calculate remaining budget
+		const remainingBudget = totalIncome - totalExpenses;
+
+		// Update states
+		setIncomeList(incomeData);
+		setExpensesList(expensesData);
+		setTotalIncome(totalIncome);
+		setTotalExpenses(totalExpenses);
+		setRemainingBudget(remainingBudget);
+
+		// Render chart
+		renderChart(totalIncome, totalExpenses, remainingBudget);
+	}, []);
+
+	// Render Chart
 	const renderChart = (income, expenses, remainingBudget) => {
-		const ctx = document.getElementById("myChart").getContext("2d");
+		const ctx = document.getElementById("myChart");
 
-		// Destroy old chart instance if it exists
-		if (chartInstance) {
-			chartInstance.destroy();
+		// Destroy existing chart
+		if (chartRef.current) {
+			chartRef.current.destroy();
 		}
 
-		const newChart = new Chart(ctx, {
+		chartRef.current = new Chart(ctx, {
 			type: "bar",
 			data: {
 				labels: ["Income", "Expenses", "Remaining Budget"],
@@ -49,92 +64,52 @@ function Reports() {
 				],
 			},
 			options: {
+				responsive: true,
+				maintainAspectRatio: false,
 				scales: {
-					y: { beginAtZero: true },
+					y: {
+						beginAtZero: true,
+					},
 				},
 			},
 		});
-
-		setChartInstance(newChart);
 	};
-
-	// Toggle dark mode
-	const toggleDarkMode = () => {
-		setDarkMode((prev) => !prev);
-	};
-
-	useEffect(() => {
-		// Cleanup chart instance on unmount
-		return () => {
-			if (chartInstance) chartInstance.destroy();
-		};
-	}, [chartInstance]);
 
 	return (
-		<div className={darkMode ? "dark-mode" : ""}>
-			{/* Header */}
-			<header>
-				<h1>Budget Tracker App</h1>
-			</header>
+		<div>
+			{/* Report Card */}
+			<div
+				className="card"
+				style={{ textAlign: "center", margin: "20px auto", maxWidth: "400px" }}
+			>
+				<h2>Spending Reports</h2>
+				<div style={{ height: "300px" }}>
+					<canvas id="myChart"></canvas>
+				</div>
 
-			{/* Dark Mode Toggle Button */}
-			<button onClick={toggleDarkMode}>Toggle Dark Mode</button>
-
-			{/* Navigation */}
-			<nav>
-				<ul>
-					<li>
-						<Link to="/">Home</Link>
-					</li>
-					<li>
-						<Link to="/budget">Budget</Link>
-					</li>
-					<li>
-						<Link to="/expenses">Expenses</Link>
-					</li>
-					<li>
-						<Link to="/reports">Reports</Link>
-					</li>
-					<li>
-						<Link to="/settings">Settings</Link>
-					</li>
-				</ul>
-			</nav>
-
-			{/* Main Container for Reports */}
-			<div className="container">
-				<div className="card">
-					<h2>Spending Reports</h2>
-					<canvas id="myChart" width="400" height="200"></canvas>
-
-					<div id="report-display">
-						<p>
-							<strong>Your report will appear here.</strong>
-						</p>
-						<p>
-							Click "Generate Report" to view your detailed spending breakdown.
-						</p>
-						<img
-							src="reports.jpg"
-							alt="Report Illustration"
-							style={{ width: "100px", marginTop: "10px" }}
-						/>
-					</div>
-
-					<button onClick={generateReport}>Generate Report</button>
+				<div style={{ marginTop: "20px" }}>
+					<p>
+						<strong>Your Total Income:</strong> {totalIncome} Ksh
+					</p>
+					<p>
+						<strong>Your Total Expenses:</strong> {totalExpenses} Ksh
+					</p>
+					<p>
+						<strong>Your Remaining Budget:</strong> {remainingBudget} Ksh
+					</p>
 				</div>
 			</div>
 
-			{/* Footer */}
-			<footer>
-				<p>&copy; 2024 Budget Tracker App. All rights reserved.</p>
-				<p>
-					Contact us at:{" "}
-					<a href="mailto:support@budgettrackerapp.com">
-						support@budgettrackerapp.com
-					</a>
-				</p>
-			</footer>
+			{/* Generate Report Button */}
+			<div style={{ textAlign: "center", marginBottom: "20px" }}>
+				<button
+					onClick={() =>
+						renderChart(totalIncome, totalExpenses, remainingBudget)
+					}
+				>
+					Refresh Report
+				</button>
+			</div>
 		</div>
 	);
 }
