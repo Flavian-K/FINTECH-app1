@@ -19,12 +19,17 @@ import ResetPassword from "./components/ResetPassword";
 function App() {
 	// Check localStorage for logged-in state
 	const [isLoggedIn, setIsLoggedIn] = useState(
-		!!sessionStorage.getItem("loggedInUser")
+		!!sessionStorage.getItem("token")
 	);
+
+	// defined a function updating the state isLoggedIn that is passed to the Login component and is called when successful log in.
+	const updateLogin = () => {
+		setIsLoggedIn(true);
+	};
 
 	// Logout function
 	const handleLogout = () => {
-		sessionStorage.removeItem("loggedInUser");
+		sessionStorage.removeItem("token");
 		setIsLoggedIn(false);
 	};
 
@@ -85,7 +90,13 @@ function App() {
 					/>
 					<Route
 						path="/login"
-						element={isLoggedIn ? <Navigate to="/dashboard" /> : <Login />}
+						element={
+							isLoggedIn ? (
+								<Navigate to="/dashboard" />
+							) : (
+								<Login updateLogin={updateLogin} />
+							)
+						}
 					/>
 					<Route
 						path="/dashboard"

@@ -13,7 +13,9 @@ function Reports() {
 	useEffect(() => {
 		// Fetch income and expenses lists
 		const incomeData = JSON.parse(localStorage.getItem("incomeList")) || [];
-		const expensesData = JSON.parse(localStorage.getItem("expensesList")) || [];
+		const expensesData = JSON.parse(localStorage.getItem("expenses")) || [];
+
+		console.log(expensesData);
 
 		// Calculate total income and expenses
 		const totalIncome = incomeData.reduce(

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; // To send requests to the backend
 
-function Login() {
+function Login({ updateLogin }) {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
@@ -18,11 +18,14 @@ function Login() {
 				password,
 			});
 
+			console.log(response);
+
 			const { token, message } = response.data;
 
 			if (token) {
 				// Store the token in sessionStorage for authentication
 				sessionStorage.setItem("token", token);
+				updateLogin();
 				alert("Login successful!");
 				navigate("/dashboard");
 			} else {

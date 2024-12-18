@@ -128,7 +128,8 @@ app.post("/login", async (req, res) => {
 			sameSite: "strict",
 		});
 
-		res.status(200).json({ message: "Login successful" });
+		// add token to response data
+		res.status(200).json({ message: "Login successful", token });
 	} catch (error) {
 		res.status(500).json({ error: "Error logging in", details: error });
 	}
