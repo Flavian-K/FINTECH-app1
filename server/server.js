@@ -10,7 +10,7 @@ const User = require("./models/user.model"); // User model
 const app = express();
 
 // Middleware
-app.use(cors({ origin: "http://localhost:3000", credentials: true })); // Allow localhost frontend
+app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true })); // Allow localhost frontend
 app.use(express.json()); // Parse JSON body
 app.use(cookieParser()); // Parse cookies
 

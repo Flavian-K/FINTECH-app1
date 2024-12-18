@@ -18,7 +18,10 @@ function Registration() {
 
 		try {
 			// Save to backend
-			await axios.post("http://localhost:3001/register", newUser);
+			await axios.post(
+				`${process.env.REACT_APP_BACKEND_URI}/register`,
+				newUser
+			);
 
 			// Retrieve existing users from localStorage or initialize an empty array
 			const users = JSON.parse(localStorage.getItem("users")) || [];

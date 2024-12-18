@@ -13,10 +13,13 @@ function Login({ updateLogin }) {
 
 		try {
 			// Send user credentials to the backend server for verification
-			const response = await axios.post("http://localhost:3001/login", {
-				username,
-				password,
-			});
+			const response = await axios.post(
+				`${process.env.REACT_APP_BACKEND_URI}/login`,
+				{
+					username,
+					password,
+				}
+			);
 
 			console.log(response);
 
